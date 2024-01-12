@@ -11,19 +11,21 @@ def confirmacion(contexto):
     :return Devuelve un un boolean. El valor sera True si escribe 'si' y False si escribe 'no'
     '''
     cont = 0
-    while(cont<5):
+    while (cont < 5):
         print(contexto)
         inputConfirmacion = input()
-        if(inputConfirmacion.lower() == 'si'):
+        if (inputConfirmacion.lower() == 'si'):
             return True
-        elif(inputConfirmacion.lower() == 'no'):
+        elif (inputConfirmacion.lower() == 'no'):
             return False
         else:
-            if(cont<4):
+            if (cont < 4):
                 print("\nValor incorrecto, pruebe otra vez(Si o no)")
-            cont+=1
+            cont += 1
     print("\nHas superado el numero de intentos")
     return False
+
+
 def entrada_teclado(contexto=""):
     """
     Funcion de apoyo que cerciora que la cadena que se introduce no este vacia
@@ -52,14 +54,14 @@ def check_index(indice):
     fallos = 0
     while fallos < 5:
         respuesta = entrada_teclado()
-        if respuesta.isnumeric(): 
+        if respuesta.isnumeric():
             if 1 <= int(respuesta) < ind_arreglado:
                 return int(respuesta) - 1
             else:
-                print('Recuerde introducir un valor entre 1 y '+str(ind_arreglado))
+                print('Recuerde introducir un valor entre 1 y ' + str(ind_arreglado))
                 fallos += 1
         else:
-            print("opcion no valida"+"\n")
+            print("opcion no valida" + "\n")
             fallos += 1
     return None
 
@@ -79,13 +81,13 @@ def check_campo(contexto, long):
         if campo is not None:
             palabras = campo.split(" ")
             carac_no_valido = False
-            for espacio in palabras:  #Comprobamos que en las posibles palabras del campo no haya componentes no alfanumericos
+            for espacio in palabras:  # Comprobamos que en las posibles palabras del campo no haya componentes no alfanumericos
                 if not espacio.isalnum():
                     carac_no_valido = True
 
             if not carac_no_valido:
                 long = int(long)
-                if 0 < len(campo) <= long:  #Verificamos la longitud del campo
+                if 0 < len(campo) <= long:  # Verificamos la longitud del campo
                     print(contexto + " introducido con exito.")
                     return campo.capitalize()
                 else:
@@ -180,13 +182,15 @@ def check_fecha():
                     mes = int(datos[1])
                     year = int(datos[2])
                     if ((mes in [1, 3, 5, 7, 8, 10, 12] and 1 <= dia <= 31 and 1990 <= year <= 2023) or
-                        (mes in [4, 6, 9, 11] and 1 <= dia <= 30 and 1990 <= year <= 2023) or
-                        (mes == 2 and 1 <= dia <= 28 and 1990 <= year <= 2023)):
+                            (mes in [4, 6, 9, 11] and 1 <= dia <= 30 and 1990 <= year <= 2023) or
+                            (mes == 2 and 1 <= dia <= 28 and 1990 <= year <= 2023)):
 
                         print("Fecha introducida con exito")
-                        return datetime.strptime(str(dia)+"/"+str(mes)+"/"+str(year), "%d/%m/%Y").strftime("%Y-%m-%d")
+                        return datetime.strptime(str(dia) + "/" + str(mes) + "/" + str(year), "%d/%m/%Y").strftime(
+                            "%Y-%m-%d")
                     else:
-                        print("No se corresponde con una fecha valida: para mas info--> https://es.wikipedia.org/wiki/Mes")
+                        print(
+                            "No se corresponde con una fecha valida: para mas info--> https://es.wikipedia.org/wiki/Mes")
                 else:
                     print("Formato de fecha no valido")
                     fallos += 1
@@ -198,5 +202,3 @@ def check_fecha():
 
     print("Se han producido 5 fallos.\nAbotortando proceso")
     return None
-
-
