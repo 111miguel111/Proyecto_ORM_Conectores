@@ -5,25 +5,9 @@ from datetime import datetime
 
 
 # UTILES
-def confirmacion(contexto):
-    '''
-    Metodo para confirmar si se quiere confirmar una operacion
-    :return Devuelve un un boolean. El valor sera True si escribe 'si' y False si escribe 'no'
-    '''
-    cont = 0
-    while(cont<5):
-        print(contexto)
-        inputConfirmacion = input()
-        if(inputConfirmacion.lower() == 'si'):
-            return True
-        elif(inputConfirmacion.lower() == 'no'):
-            return False
-        else:
-            if(cont<4):
-                print("\nValor incorrecto, pruebe otra vez(Si o no)")
-            cont+=1
-    print("\nHas superado el numero de intentos")
-    return False
+
+
+
 def entrada_teclado(contexto=""):
     """
     Funcion de apoyo que cerciora que la cadena que se introduce no este vacia
