@@ -217,9 +217,9 @@ def crearTablas(conn):
                 db_table = "Cursos"
 
         class Cursos_Profesores(Model):
-            cod_curs = conn.ForeignKeyField(Cursos)
+            cod_curs = conn.ForeignKeyField(Cursos, on_delete='CASCADE', on_updae='CASCADE')
             nombre_curs = conn.CharField(min_lenght=1, max_length=25, NULL=False)
-            id_prof = conn.ForeignKeyField(Profesores)
+            id_prof = conn.ForeignKeyField(Profesores, on_delete='CASCADE', on_updae='CASCADE')
             nombre_prof = conn.CharField(min_lenght=1, max_length=25, NULL=False)
 
             class Meta:
@@ -228,9 +228,9 @@ def crearTablas(conn):
                 db_table = "Cursos_Profesores"
 
         class Cursos_Alumnos(Model):
-            cod_curs = conn.ForeignKeyField(Cursos)
+            cod_curs = conn.ForeignKeyField(Cursos, on_delete='CASCADE', on_updae='CASCADE')
             nombre_curs = conn.CharField(min_lenght=1, max_length=25, NULL=False)
-            num_exp = conn.ForeignKeyField(Alumnos)
+            num_exp = conn.ForeignKeyField(Alumnos, on_delete='CASCADE', on_updae='CASCADE')
             nombre_alum = conn.CharField(min_lenght=1, max_length=25, NULL=False)
 
             class Meta:
