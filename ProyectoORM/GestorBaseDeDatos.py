@@ -1,7 +1,7 @@
 import pymysql
 from peewee import *
 import configparser
-import utiles
+import Utiles
 import sys
 
 
@@ -182,6 +182,65 @@ def mysqlconnect():
             sys.exit()  # Cerramos el programa ya que no deberia continuar tras este error
 
 
+def crearTablas(conn):
+    try:
+        class Profesores(Model):
+            id_prof = conn.AutoField()  # Equivale al auto_increment
+            dni = conn.CharField(min_lenght=9, max_length=9, NULL=False)
+            nombre = conn.CharField(min_lenght=1, max_length=25, NULL=False)
+            telefono = conn.CharField(min_lenght=9, max_length=9, NULL=False)
+            direccion = conn.CharField(min_lenght=1, max_length=50, NULL=False)
+
+            class Meta:
+                database = conn
+                db_table = "Profesores"
+
+        class Alumnos(Model):
+            num_exp = conn.AutoField()  # Equivale al auto_increment
+            nombre = conn.CharField(min_lenght=1, max_length=25, NULL=False)
+            apellido = conn.CharField(min_lenght=1, max_length=25, NULL=False)
+            telefono = conn.CharField(min_lenght=9, max_length=9, NULL=False)
+            direccion = conn.CharField(min_lenght=1, max_length=50, NULL=False)
+            fech_nacim = conn.DateField(formats=['%d-%b-%Y'], NULL=False)
+
+            class Meta:
+                database = conn
+                db_table = "Alumnos"
+
+        class Cursos(Model):
+            cod_curs = conn.AutoField()  # Equivale al auto_increment
+            nombre = conn.CharField(min_lenght=1, max_length=25, NULL=False)
+            descripcion = conn.CharField(min_lenght=1, max_length=50, NULL=False)
+
+            class Meta:
+                database = conn
+                db_table = "Cursos"
+
+        class Cursos_Profesores(Model):
+            cod_curs = conn.ForeignKeyField(Cursos)
+            nombre_curs = conn.CharField(min_lenght=1, max_length=25, NULL=False)
+            id_prof = conn.ForeignKeyField(Profesores)
+            nombre_prof = conn.CharField(min_lenght=1, max_length=25, NULL=False)
+
+            class Meta:
+                primary_key = conn.compositeKey('cod_curs', 'id_prof')
+                database = conn
+                db_table = "Cursos_Profesores"
+
+        class Cursos_Alumnos(Model):
+            cod_curs = conn.ForeignKeyField(Cursos)
+            nombre_curs = conn.CharField(min_lenght=1, max_length=25, NULL=False)
+            num_exp = conn.ForeignKeyField(Alumnos)
+            nombre_alum = conn.CharField(min_lenght=1, max_length=25, NULL=False)
+
+            class Meta:
+                primary_key = conn.compositeKey('cod_curs', 'num_exp')
+                database = conn
+                db_table = "Cursos_Alumnos"
+    except:
+        print("Las tablas no se crearon correctamente.")
+
+
 def conectarAPeewee():
     try:
         config = configparser.ConfigParser()
@@ -196,6 +255,9 @@ def conectarAPeewee():
                              password=password_variable,
                              host=host_variable,
                              port=port_variable)
+
+        crearTablas(conn)
+
         return conn
     # Si la conexion no se puede realizar ya sea por que  el gestor de base de datos esta apagado nos informara
     except:
@@ -242,16 +304,56 @@ def iniciar():
         else:
             iniciarFicheroConfiguracion()
         # Llama a la conexion para comprobar si esta funciona
-        #Creamos la bbdd en pymysql
+        # Creamos la bbdd en pymysql
         conn = mysqlconnect()  # Nos conectamos
         cur = conn.cursor()  # Creamos un cursor que se usara para crear la base de datos y las tablas correspondientes
         cur.execute("CREATE DATABASE IF NOT EXISTS miguel_antonio_bd")
         conn.commit()
         cur.close()
         conn.close()
-        #Creamos la conexion a la bbdd desde peewee
+        # Creamos la conexion a la bbdd desde peewee
         conn = conectarAPeewee()
 
-        return conn #Devuelve la conexion de peewee a la bbdd para que se trabaje con ella.
+        return conn  # Devuelve la conexion de peewee a la bbdd para que se trabaje con ella.
     except:
+        return None
+
+
+def insert(conn, tabla, datos):
+    """
+    Funcion encargada de la realizacion de los inserts en la bbdd.
+    :param conn es la conexion, tabla es la tabla a la que corresponde el insert, datos es un diccionario con los datos del insert
+    """
+    try:
+        if tabla == "Profesores":
+            conn.Profesores.create(dni=datos['dni'],
+                                   nombre=datos['nombre'],
+                                   telefono=datos['telefono'],
+                                   direccion=datos['direccion'])
+
+        elif tabla == "Alumnos":
+            conn.Alumnos.create(nombre=datos['nombre'],
+                                apellido=datos['apellido'],
+                                telefono=datos['telefono'],
+                                direccion=datos['direccion'],
+                                fech_nacim=datos['fech_nacim'])
+
+        elif tabla == "Cursos":
+            conn.Cursos.create(nombre=datos['nombre'],
+                               descripcion=datos['descripcion'])
+
+        elif tabla == "Cursos_Profesores":
+            conn.Cursos_Profesores.create(cod_curs=datos['cod_curs'],
+                                          nombre_curs=datos['cod_curs'],
+                                          id_prof=datos['id_prof'],
+                                          nombre_prof=datos['nombre_prof'])
+
+        elif tabla == "Cursos_Alumnos":
+            conn.Cursos_Alumnos.create(cod_curs=datos['cod_curs'],
+                                       nombre_curs=datos['nombre_curs'],
+                                       num_exp=datos['nombre_curs'],
+                                       nombre_alum=datos['nombre_alum'])
+        return True
+    except:
+        print("Fallos en la insercion")
         return None
