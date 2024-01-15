@@ -186,7 +186,7 @@ def crearTablas(conn):
     try:
         class Profesores(Model):
             id_prof = conn.AutoField()  # Equivale al auto_increment
-            dni = conn.CharField(min_lenght=9, max_length=9, NULL=False)
+            dni = conn.CharField(min_lenght=9, max_length=9, NULL=False, unique=True)
             nombre = conn.CharField(min_lenght=1, max_length=25, NULL=False)
             telefono = conn.CharField(min_lenght=9, max_length=9, NULL=False)
             direccion = conn.CharField(min_lenght=1, max_length=50, NULL=False)
@@ -204,12 +204,15 @@ def crearTablas(conn):
             fech_nacim = conn.DateField(formats=['%d-%b-%Y'], NULL=False)
 
             class Meta:
+                indexes = (  #Para hacer que la combinacion de campos sea unique
+                    (('nombre', 'apellido'), True),
+                )
                 database = conn
                 db_table = "Alumnos"
 
         class Cursos(Model):
             cod_curs = conn.AutoField()  # Equivale al auto_increment
-            nombre = conn.CharField(min_lenght=1, max_length=25, NULL=False)
+            nombre = conn.CharField(min_lenght=1, max_length=25, NULL=False, unique=True)
             descripcion = conn.CharField(min_lenght=1, max_length=50, NULL=False)
 
             class Meta:
@@ -279,9 +282,9 @@ def conectarAPeewee():
 
 def iniciar():
     '''
-    Funcion encargada de iniciar todo lo relacionado con la base de datos, la configuracion la conexion, crear las tablas etc
+    Funcion encargada de iniciar lo relacionado con la base de datos, la configuracion la conexion, crear las tablas etc
     '''
-    # Metodo que inicia lo relacionado con la base de datos, comprueba el fichero de datos, comprueba la conexion y si todo esta bien procede a crear una base de datos con las tablas necesarias
+    # Metodo que inicia lo relacionado con la base de datos, comprueba el fichero de datos, comprueba la conexion y si esta bien procede a crear una base de datos con las tablas necesarias
     try:
         if (checkFileExistance(
                 "config.ini") == True):  # Comprobamos que el fichero de configuracion existe, si no es el caso lo creamos con los datos por defecto
@@ -353,6 +356,41 @@ def insert(conn, tabla, datos):
                                        nombre_curs=datos['nombre_curs'],
                                        num_exp=datos['nombre_curs'],
                                        nombre_alum=datos['nombre_alum'])
+        return True
+    except:
+        print("Fallos en la insercion")
+        return None
+
+
+def delete(conn, tabla, primary):
+    """
+    Funcion encargada de la realizacion de los inserts en la bbdd.
+    :param conn es la conexion, tabla es la tabla a la que corresponde el insert, datos es un diccionario con los datos del insert
+    """
+    try:
+        if tabla == "Profesores":
+            borrar = conn.Profesores.delete().where(conn.Profesores.dni == primary)
+            borrar.execute()
+
+        elif tabla == "Alumnos":
+            borrar = conn.Alumnos.delete().where(conn.Alumnos.nombre == primary['nombre'] &
+                                                 conn.Alumnos.apellido == primary['apellido'])
+            borrar.execute()
+
+        elif tabla == "Cursos":
+            borrar = conn.Cursos.delete().where(conn.Cursos.nombre == primary)
+            borrar.execute()
+
+        elif tabla == "Cursos_Profesores":
+            borrar = conn.Cursos_Profesores.delete().where(conn.Cursos.cod_curs == primary['cod_curs'] &
+                                                           conn.Profesores.id_prof == primary['id_prof'])
+            borrar.execute()
+
+        elif tabla == "Cursos_Alumnos":
+            borrar = conn.Cursos_Alumnos.delete().where(conn.Cursos.cod_curs == primary['cod_curs'] &
+                                                           conn.Alumnos.num_exp == primary['num_exp'])
+            borrar.execute()
+
         return True
     except:
         print("Fallos en la insercion")
