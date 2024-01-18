@@ -3,7 +3,7 @@ from peewee import *
 import configparser
 import Utiles
 import sys
-
+import traceback
 
 def escanerNumerico():
     '''
@@ -32,7 +32,7 @@ def iniciarFicheroConfiguracion():
         config = configparser.ConfigParser()  # Creamos la variable
         config['SERVER'] = {'host': 'localhost',
                             'user': 'root',
-                            'password': 'my-secret-pw',
+                            'password': '1234',
                             'port': '3306'}
         with open('config.ini', 'w') as configfile:  # Escribimos el fichero de configuracion
             config.write(configfile)
@@ -151,7 +151,7 @@ def mysqlconnect():
         user_variable = str(config['SERVER']['user'])
         password_variable = str(config['SERVER']['password'])
         port_variable = int(config['SERVER']['port'])
-
+        
         conn = pymysql.connect(
             host=host_variable,
             user=user_variable,
@@ -161,8 +161,7 @@ def mysqlconnect():
         return conn
     # Si la conexion no se puede realizar ya sea por que  el gestor de base de datos esta apagado nos informara
     except pymysql.err.OperationalError as e:
-        print(
-            "Se ha producido un error, compruebe que el sistema gestor de base de datos al que se quiere conectar \nesta operativa y que los datos son correctos.\nEl programa se cerrara")
+        print("Se ha producido un error, compruebe que el sistema gestor de base de datos al que se quiere conectar \nesta operativa y que los datos son correctos.\nEl programa se cerrara")
         sys.exit()  # Cerramos el programa ya que no deberia continuar tras este error
     # Si la conexion no se puede realizar por que el fichero de configuracion esta mal  nos informara
     except:
@@ -180,7 +179,8 @@ def mysqlconnect():
         else:
             print("El programa se cerrara")
             sys.exit()  # Cerramos el programa ya que no deberia continuar tras este error
-
+    
+    
 
 def crearTablas(conn):
     try:
