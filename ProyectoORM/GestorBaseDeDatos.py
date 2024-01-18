@@ -180,28 +180,27 @@ def mysqlconnect():
             print("El programa se cerrara")
             sys.exit()  # Cerramos el programa ya que no deberia continuar tras este error
     
-    
 
 def crearTablas(conn):
     try:
         class Profesores(Model):
-            id_prof = conn.AutoField()  # Equivale al auto_increment
-            dni = conn.CharField(min_lenght=9, max_length=9, NULL=False, unique=True)
-            nombre = conn.CharField(min_lenght=1, max_length=25, NULL=False)
-            telefono = conn.CharField(min_lenght=9, max_length=9, NULL=False)
-            direccion = conn.CharField(min_lenght=1, max_length=50, NULL=False)
+            id_prof = AutoField()  # Equivale al auto_increment
+            dni = CharField(null=False, unique=True)
+            nombre = CharField(null=False)
+            telefono = CharField(null=False)
+            direccion = CharField(null=False)
 
             class Meta:
                 database = conn
                 db_table = "Profesores"
 
         class Alumnos(Model):
-            num_exp = conn.AutoField()  # Equivale al auto_increment
-            nombre = conn.CharField(min_lenght=1, max_length=25, NULL=False)
-            apellido = conn.CharField(min_lenght=1, max_length=25, NULL=False)
-            telefono = conn.CharField(min_lenght=9, max_length=9, NULL=False)
-            direccion = conn.CharField(min_lenght=1, max_length=50, NULL=False)
-            fech_nacim = conn.DateField(formats=['%d-%b-%Y'], NULL=False)
+            num_exp = AutoField()  # Equivale al auto_increment
+            nombre = CharField(null=False)
+            apellido = CharField(null=False)
+            telefono = CharField(null=False)
+            direccion = CharField(null=False)
+            fech_nacim = DateField(formats=['%d-%b-%Y'], null=False)
 
             class Meta:
                 indexes = (  #Para hacer que la combinacion de campos sea unique
@@ -211,37 +210,40 @@ def crearTablas(conn):
                 db_table = "Alumnos"
 
         class Cursos(Model):
-            cod_curs = conn.AutoField()  # Equivale al auto_increment
-            nombre = conn.CharField(min_lenght=1, max_length=25, NULL=False, unique=True)
-            descripcion = conn.CharField(min_lenght=1, max_length=50, NULL=False)
+            cod_curs = AutoField()  # Equivale al auto_increment
+            nombre = CharField(null=False, unique=True)
+            descripcion = CharField(null=False)
 
             class Meta:
                 database = conn
                 db_table = "Cursos"
 
         class Cursos_Profesores(Model):
-            cod_curs = conn.ForeignKeyField(Cursos, on_delete='CASCADE', on_updae='CASCADE')
-            nombre_curs = conn.CharField(min_lenght=1, max_length=25, NULL=False)
-            id_prof = conn.ForeignKeyField(Profesores, on_delete='CASCADE', on_updae='CASCADE')
-            nombre_prof = conn.CharField(min_lenght=1, max_length=25, NULL=False)
+            cod_curs = ForeignKeyField(Cursos, on_delete='CASCADE', on_update='CASCADE')
+            nombre_curs = CharField(null=False)
+            id_prof = ForeignKeyField(Profesores, on_delete='CASCADE', on_update='CASCADE')
+            nombre_prof = CharField(null=False)
 
             class Meta:
-                primary_key = conn.compositeKey('cod_curs', 'id_prof')
                 database = conn
                 db_table = "Cursos_Profesores"
+                primary_key = CompositeKey('cod_curs', 'id_prof')
 
         class Cursos_Alumnos(Model):
-            cod_curs = conn.ForeignKeyField(Cursos, on_delete='CASCADE', on_updae='CASCADE')
-            nombre_curs = conn.CharField(min_lenght=1, max_length=25, NULL=False)
-            num_exp = conn.ForeignKeyField(Alumnos, on_delete='CASCADE', on_updae='CASCADE')
-            nombre_alum = conn.CharField(min_lenght=1, max_length=25, NULL=False)
+            cod_curs = ForeignKeyField(Cursos, on_delete='CASCADE', on_update='CASCADE')
+            nombre_curs = CharField(null=False)
+            num_exp = ForeignKeyField(Alumnos, on_delete='CASCADE', on_update='CASCADE')
+            nombre_alum = CharField(null=False)
 
             class Meta:
-                primary_key = conn.compositeKey('cod_curs', 'num_exp')
                 database = conn
                 db_table = "Cursos_Alumnos"
-    except:
-        print("Las tablas no se crearon correctamente.")
+                primary_key = CompositeKey('cod_curs', 'num_exp')
+
+        conn.create_tables([Profesores, Alumnos, Cursos, Cursos_Profesores, Cursos_Alumnos])
+    except Exception:
+        #print(traceback.format_exc())
+        print("No se pudieron crear las tablas.")
 
 
 def conectarAPeewee():
@@ -259,6 +261,7 @@ def conectarAPeewee():
                              host=host_variable,
                              port=port_variable)
 
+        print(conn, type(conn))
         crearTablas(conn)
 
         return conn
