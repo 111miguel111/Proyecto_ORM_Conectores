@@ -179,7 +179,7 @@ def mysqlconnect():
         else:
             print("El programa se cerrara")
             sys.exit()  # Cerramos el programa ya que no deberia continuar tras este error
-    
+
 
 def crearTablas(conn):
     try:
@@ -192,7 +192,6 @@ def crearTablas(conn):
 
             class Meta:
                 database = conn
-                db_table = "Profesores"
 
         class Alumnos(Model):
             num_exp = AutoField()  # Equivale al auto_increment
@@ -203,11 +202,10 @@ def crearTablas(conn):
             fech_nacim = DateField(formats=['%d-%b-%Y'], null=False)
 
             class Meta:
-                indexes = (  #Para hacer que la combinacion de campos sea unique
+                database = conn
+                indexes = (  # Para hacer que la combinacion de campos sea unique
                     (('nombre', 'apellido'), True),
                 )
-                database = conn
-                db_table = "Alumnos"
 
         class Cursos(Model):
             cod_curs = AutoField()  # Equivale al auto_increment
@@ -216,7 +214,6 @@ def crearTablas(conn):
 
             class Meta:
                 database = conn
-                db_table = "Cursos"
 
         class Cursos_Profesores(Model):
             cod_curs = ForeignKeyField(Cursos, on_delete='CASCADE', on_update='CASCADE')
@@ -226,7 +223,6 @@ def crearTablas(conn):
 
             class Meta:
                 database = conn
-                db_table = "Cursos_Profesores"
                 primary_key = CompositeKey('cod_curs', 'id_prof')
 
         class Cursos_Alumnos(Model):
@@ -237,12 +233,11 @@ def crearTablas(conn):
 
             class Meta:
                 database = conn
-                db_table = "Cursos_Alumnos"
                 primary_key = CompositeKey('cod_curs', 'num_exp')
 
         conn.create_tables([Profesores, Alumnos, Cursos, Cursos_Profesores, Cursos_Alumnos])
     except Exception:
-        #print(traceback.format_exc())
+        print(traceback.format_exc())
         print("No se pudieron crear las tablas.")
 
 
@@ -262,6 +257,7 @@ def conectarAPeewee():
                              port=port_variable)
 
         print(conn, type(conn))
+        conn.connect()
         crearTablas(conn)
 
         return conn
@@ -289,8 +285,7 @@ def iniciar():
     '''
     # Metodo que inicia lo relacionado con la base de datos, comprueba el fichero de datos, comprueba la conexion y si esta bien procede a crear una base de datos con las tablas necesarias
     try:
-        if (checkFileExistance(
-                "config.ini") == True):  # Comprobamos que el fichero de configuracion existe, si no es el caso lo creamos con los datos por defecto
+        if (checkFileExistance("config.ini") == True):  # Comprobamos que el fichero de configuracion existe, si no es el caso lo creamos con los datos por defecto
             if (checkConfigBien("config.ini") == False):  # Comprobamos que el fichero de configuracion esta bien
                 # Si hay algun error informamos al usuario
                 print(
@@ -331,38 +326,41 @@ def insert(conn, tabla, datos):
     :param conn es la conexion, tabla es la tabla a la que corresponde el insert, datos es un diccionario con los datos del insert
     """
     try:
+        
         if tabla == "Profesores":
-            conn.Profesores.create(dni=datos['dni'],
+            Profesores.create(dni=datos['dni'],
                                    nombre=datos['nombre'],
                                    telefono=datos['telefono'],
                                    direccion=datos['direccion'])
 
         elif tabla == "Alumnos":
-            conn.Alumnos.create(nombre=datos['nombre'],
+            Alumnos.create(nombre=datos['nombre'],
                                 apellido=datos['apellido'],
                                 telefono=datos['telefono'],
                                 direccion=datos['direccion'],
                                 fech_nacim=datos['fech_nacim'])
 
         elif tabla == "Cursos":
-            conn.Cursos.create(nombre=datos['nombre'],
+            Cursos.create(nombre=datos['nombre'],
                                descripcion=datos['descripcion'])
 
         elif tabla == "Cursos_Profesores":
-            conn.Cursos_Profesores.create(cod_curs=datos['cod_curs'],
+            Cursos_Profesores.create(cod_curs=datos['cod_curs'],
                                           nombre_curs=datos['cod_curs'],
                                           id_prof=datos['id_prof'],
                                           nombre_prof=datos['nombre_prof'])
 
         elif tabla == "Cursos_Alumnos":
-            conn.Cursos_Alumnos.create(cod_curs=datos['cod_curs'],
+            Cursos_Alumnos.create(cod_curs=datos['cod_curs'],
                                        nombre_curs=datos['nombre_curs'],
                                        num_exp=datos['nombre_curs'],
                                        nombre_alum=datos['nombre_alum'])
+
         return True
     except:
         print("Fallos en la insercion")
-        return None
+        print(traceback.format_exc())
+        return False
 
 
 def delete(conn, tabla, primary):
@@ -371,30 +369,32 @@ def delete(conn, tabla, primary):
     :param conn es la conexion, tabla es la tabla a la que corresponde el insert, datos es un diccionario con los datos del insert
     """
     try:
+        conn.get_conn()
         if tabla == "Profesores":
-            borrar = conn.Profesores.delete().where(conn.Profesores.dni == primary)
+            borrar = Profesores.delete().where(Profesores.dni == primary)
             borrar.execute()
 
         elif tabla == "Alumnos":
-            borrar = conn.Alumnos.delete().where(conn.Alumnos.nombre == primary['nombre'] &
-                                                 conn.Alumnos.apellido == primary['apellido'])
+            borrar = Alumnos.delete().where(Alumnos.nombre == primary['nombre'] &
+                                                 Alumnos.apellido == primary['apellido'])
             borrar.execute()
 
         elif tabla == "Cursos":
-            borrar = conn.Cursos.delete().where(conn.Cursos.nombre == primary)
+            borrar = Cursos.delete().where(Cursos.nombre == primary)
             borrar.execute()
 
         elif tabla == "Cursos_Profesores":
-            borrar = conn.Cursos_Profesores.delete().where(conn.Cursos.cod_curs == primary['cod_curs'] &
-                                                           conn.Profesores.id_prof == primary['id_prof'])
+            borrar = Cursos_Profesores.delete().where(Cursos.cod_curs == primary['cod_curs'] &
+                                                           Profesores.id_prof == primary['id_prof'])
             borrar.execute()
 
         elif tabla == "Cursos_Alumnos":
-            borrar = conn.Cursos_Alumnos.delete().where(conn.Cursos.cod_curs == primary['cod_curs'] &
-                                                           conn.Alumnos.num_exp == primary['num_exp'])
+            borrar = Cursos_Alumnos.delete().where(Cursos.cod_curs == primary['cod_curs'] &
+                                                           Alumnos.num_exp == primary['num_exp'])
             borrar.execute()
 
         return True
     except:
         print("Fallos en la insercion")
-        return None
+        print(traceback.format_exc())
+        return False

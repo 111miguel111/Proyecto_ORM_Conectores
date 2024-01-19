@@ -15,7 +15,7 @@ def alta(conn):
         if nombre is not None:
             telefono = Utiles.check_telefono()
         if telefono is not None:
-            direccion = Utiles.check_campo()
+            direccion = Utiles.check_campo("direccion", 50)
         if direccion is not None:
             datos = {'dni': dni,
                      'nombre': nombre,
