@@ -338,13 +338,14 @@ def delete(tabla, primary):
 def update(tabla, id, campo, dato):
     try:
         if tabla == "Profesores":
-            
-            Profesores.update(campo=request.form[dato]).where(Profesores.id_prof==session[id]).execute()
-            
-            Profesor.update(campo=dato).where(Profesores.id_prof==id).execute()
-            
-            actualizar = Profesores.update({conn.Profesores.campo:dato}).where(Profesores.id_prof==id)
-            actualizar.execute()
+            if campo=="dni":
+                Profesor.update(dni=dato).where(Profesores.dni==id).execute()
+            elif campo=="nombre":
+                Profesor.update(nombre=dato).where(Profesores.dni==id).execute()
+            elif campo=="telefono":
+                Profesor.update(telefono=dato).where(Profesores.dni==id).execute()
+            elif campo=="direccion":
+                Profesor.update(direccion=dato).where(Profesores.dni==id).execute()
 
         elif tabla == "Alumnos":
             actualizar = Alumnos.delete().where(Alumnos.nombre == primary['nombre'] &
