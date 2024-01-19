@@ -183,59 +183,8 @@ def mysqlconnect():
 
 def crearTablas(conn):
     try:
-        class Profesores(Model):
-            id_prof = AutoField()  # Equivale al auto_increment
-            dni = CharField(null=False, unique=True)
-            nombre = CharField(null=False)
-            telefono = CharField(null=False)
-            direccion = CharField(null=False)
-
-            class Meta:
-                database = conn
-
-        class Alumnos(Model):
-            num_exp = AutoField()  # Equivale al auto_increment
-            nombre = CharField(null=False)
-            apellido = CharField(null=False)
-            telefono = CharField(null=False)
-            direccion = CharField(null=False)
-            fech_nacim = DateField(formats=['%d-%b-%Y'], null=False)
-
-            class Meta:
-                database = conn
-                indexes = (  # Para hacer que la combinacion de campos sea unique
-                    (('nombre', 'apellido'), True),
-                )
-
-        class Cursos(Model):
-            cod_curs = AutoField()  # Equivale al auto_increment
-            nombre = CharField(null=False, unique=True)
-            descripcion = CharField(null=False)
-
-            class Meta:
-                database = conn
-
-        class Cursos_Profesores(Model):
-            cod_curs = ForeignKeyField(Cursos, on_delete='CASCADE', on_update='CASCADE')
-            nombre_curs = CharField(null=False)
-            id_prof = ForeignKeyField(Profesores, on_delete='CASCADE', on_update='CASCADE')
-            nombre_prof = CharField(null=False)
-
-            class Meta:
-                database = conn
-                primary_key = CompositeKey('cod_curs', 'id_prof')
-
-        class Cursos_Alumnos(Model):
-            cod_curs = ForeignKeyField(Cursos, on_delete='CASCADE', on_update='CASCADE')
-            nombre_curs = CharField(null=False)
-            num_exp = ForeignKeyField(Alumnos, on_delete='CASCADE', on_update='CASCADE')
-            nombre_alum = CharField(null=False)
-
-            class Meta:
-                database = conn
-                primary_key = CompositeKey('cod_curs', 'num_exp')
-
         conn.create_tables([Profesores, Alumnos, Cursos, Cursos_Profesores, Cursos_Alumnos])
+        print("Se han creado las tablas bien.")
     except Exception:
         print(traceback.format_exc())
         print("No se pudieron crear las tablas.")
@@ -258,7 +207,6 @@ def conectarAPeewee():
 
         print(conn, type(conn))
         conn.connect()
-        crearTablas(conn)
 
         return conn
     # Si la conexion no se puede realizar ya sea por que  el gestor de base de datos esta apagado nos informara
@@ -326,7 +274,6 @@ def insert(conn, tabla, datos):
     :param conn es la conexion, tabla es la tabla a la que corresponde el insert, datos es un diccionario con los datos del insert
     """
     try:
-        
         if tabla == "Profesores":
             Profesores.create(dni=datos['dni'],
                                    nombre=datos['nombre'],
@@ -369,7 +316,6 @@ def delete(conn, tabla, primary):
     :param conn es la conexion, tabla es la tabla a la que corresponde el insert, datos es un diccionario con los datos del insert
     """
     try:
-        conn.get_conn()
         if tabla == "Profesores":
             borrar = Profesores.delete().where(Profesores.dni == primary)
             borrar.execute()
@@ -398,3 +344,137 @@ def delete(conn, tabla, primary):
         print("Fallos en la insercion")
         print(traceback.format_exc())
         return False
+
+
+def selectAll2(tabla):
+    try:
+        lista = ()
+        if tabla == "Profesores":
+            lista = list(Profesores.select().dicts())
+            for X in lista:
+                print(X)
+        elif tabla == "Alumnos":
+            lista = list(Alumnos.select().dicts())
+            for X in lista:
+                print(X)
+        elif tabla == "Cursos":
+            lista = list(Cursos.select().dicts())
+            for X in lista:
+                print(X)
+        elif tabla == "Cursos_Profesores":
+            lista = list(Cursos_Profesores.select().dicts())
+            for X in lista:
+                print(X)
+        elif tabla == "Cursos_Alumnos":
+            lista = list(Cursos_Alumnos.select().dicts())
+            for X in lista:
+                print(X)
+
+        return lista
+    except:
+        print("Fallos en la seleccion")
+        print(traceback.format_exc())
+        return False
+    return 0
+
+
+def select1(tabla, primary):
+    try:
+        entidad = None
+        if tabla == "Profesores":
+            entidad = Profesores.select().where(Profesores.dni == primary).get()
+
+        elif tabla == "Alumnos":
+            entidad = Alumnos.select().where(Alumnos.nombre == primary[0] &
+                                             Alumnos.apellido == primary[1]).get()
+
+        elif tabla == "Cursos":
+            entidad = Cursos.select().where(Cursos.nombre == primary).get()
+
+        elif tabla == "Cursos_Profesores":
+            entidad = Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary[0] &
+                                                       Cursos_Profesores.id_prof == primary[1]).get()
+
+        elif tabla == "Cursos_Alumnos":
+            entidad = Cursos_Alumnos.select().where(Cursos_Alumnos.cod_curs == primary[0] &
+                                                    Cursos_Alumnos.num_exp == primary[1]).get()
+
+        return entidad
+    except:
+        print("Fallos en la seleccion")
+        print(traceback.format_exc())
+        return False
+
+
+conn = None
+# ES LA MIERDA MAS GRANDE DE LA NOCHE TAL VEZ, HE PROBADO UN MONTON DE COSAS, TAMBIEN, FUNCIONA COMO UN TIRO, ALSO YES
+if (iniciar()):
+    conn = conectarAPeewee()  # SOLO SE CONECTA Y DEVULEVE CONN NADA MAS
+else:
+    sys.exit()  # Cerramos el programa ya que no deberia continuar tras este error
+
+
+# LOS CLASS NO HE ENCONTRADO LA MANERA DE QUE ESTEN DENTRO DE UNA FUNCION, POR COJONES ESTAN FUERA
+# A LA HORA DEL CONN NO ME GUSTA HACERLO GLOBAL PORQUE NO ME GUSTA
+# LA OTRA OPCION ESQUE EN CADA "database = conn" PONER "database = conestarAPeewee()" PERO ESO CREO QUE ES PEOR QUE UN CONN GLOBAL
+
+class Profesores(Model):
+    id_prof = AutoField()  # Equivale al auto_increment
+    dni = CharField(null=False, unique=True)
+    nombre = CharField(null=False)
+    telefono = CharField(null=False)
+    direccion = CharField(null=False)
+
+    class Meta:
+        database = conn
+
+
+class Alumnos(Model):
+    num_exp = AutoField()  # Equivale al auto_increment
+    nombre = CharField(null=False)
+    apellido = CharField(null=False)
+    telefono = CharField(null=False)
+    direccion = CharField(null=False)
+    fech_nacim = DateField(formats=['%d-%b-%Y'], null=False)
+
+    class Meta:
+        database = conn
+        indexes = (  # Para hacer que la combinacion de campos sea unique
+            (('nombre', 'apellido'), True),
+        )
+
+
+class Cursos(Model):
+    cod_curs = AutoField()  # Equivale al auto_increment
+    nombre = CharField(null=False, unique=True)
+    descripcion = CharField(null=False)
+
+    class Meta:
+        database = conn
+
+
+class Cursos_Profesores(Model):
+    cod_curs = ForeignKeyField(Cursos, on_delete='CASCADE', on_update='CASCADE')
+    nombre_curs = CharField(null=False)
+    id_prof = ForeignKeyField(Profesores, on_delete='CASCADE', on_update='CASCADE')
+    nombre_prof = CharField(null=False)
+
+    class Meta:
+        database = conn
+        primary_key = CompositeKey('cod_curs', 'id_prof')
+
+
+class Cursos_Alumnos(Model):
+    cod_curs = ForeignKeyField(Cursos, on_delete='CASCADE', on_update='CASCADE')
+    nombre_curs = CharField(null=False)
+    num_exp = ForeignKeyField(Alumnos, on_delete='CASCADE', on_update='CASCADE')
+    nombre_alum = CharField(null=False)
+
+    class Meta:
+        database = conn
+        primary_key = CompositeKey('cod_curs', 'num_exp')
+
+
+# SI INTENTO PONER EL CREAR TABLAS EN CAULQUIER OTRO SITIO QUE NO SEA JUSTAMENTE DESPUES DE LOS CLASS ME DICE QUE LAS CLASSES NO ESTAN DEFINIDAS
+# Y OBVIAMENTE SI EL IF DE MIERDA LOPONGO AQUI ABAJO LAS CLASES ME DICEN QUE CONN NO ESTA DEFINIDA
+crearTablas(conn)
