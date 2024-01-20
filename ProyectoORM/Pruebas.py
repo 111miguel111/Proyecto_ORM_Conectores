@@ -3,9 +3,14 @@ import GestionProfesores
 
 conn = GestorBaseDeDatos.iniciar()
 
+#GestionProfesores.alta()
 
-#GestionProfesores.alta(conn)
+#GestionProfesores.baja()
 
-GestionProfesores.baja(conn)
+#GestionProfesores.modificar()
+
+#GestionProfesores.buscar()
+
+GestionProfesores.mostarTodos()
 
 conn.close()

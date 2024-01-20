@@ -268,7 +268,7 @@ def iniciar():
         return None
 
 
-def insert(conn, tabla, datos):
+def insert(tabla, datos):
     """
     Funcion encargada de la realizacion de los inserts en la bbdd.
     :param conn es la conexion, tabla es la tabla a la que corresponde el insert, datos es un diccionario con los datos del insert
@@ -293,14 +293,14 @@ def insert(conn, tabla, datos):
 
         elif tabla == "Cursos_Profesores":
             Cursos_Profesores.create(cod_curs=datos['cod_curs'],
-                                          nombre_curs=datos['cod_curs'],
+                                          nombre_curs=datos['nombre_curs'],
                                           id_prof=datos['id_prof'],
                                           nombre_prof=datos['nombre_prof'])
 
         elif tabla == "Cursos_Alumnos":
             Cursos_Alumnos.create(cod_curs=datos['cod_curs'],
                                        nombre_curs=datos['nombre_curs'],
-                                       num_exp=datos['nombre_curs'],
+                                       num_exp=datos['num_exp'],
                                        nombre_alum=datos['nombre_alum'])
 
         return True
@@ -310,7 +310,7 @@ def insert(conn, tabla, datos):
         return False
 
 
-def delete(conn, tabla, primary):
+def delete(tabla, primary):
     """
     Funcion encargada de la realizacion de los inserts en la bbdd.
     :param conn es la conexion, tabla es la tabla a la que corresponde el insert, datos es un diccionario con los datos del insert
@@ -351,30 +351,24 @@ def selectAll2(tabla):
         lista = ()
         if tabla == "Profesores":
             lista = list(Profesores.select().dicts())
-            for X in lista:
-                print(X)
+
         elif tabla == "Alumnos":
             lista = list(Alumnos.select().dicts())
-            for X in lista:
-                print(X)
+
         elif tabla == "Cursos":
             lista = list(Cursos.select().dicts())
-            for X in lista:
-                print(X)
+
         elif tabla == "Cursos_Profesores":
             lista = list(Cursos_Profesores.select().dicts())
-            for X in lista:
-                print(X)
+
         elif tabla == "Cursos_Alumnos":
             lista = list(Cursos_Alumnos.select().dicts())
-            for X in lista:
-                print(X)
 
         return lista
     except:
         print("Fallos en la seleccion")
         print(traceback.format_exc())
-        return False
+        return None
     return 0
 
 
@@ -385,25 +379,25 @@ def select1(tabla, primary):
             entidad = Profesores.select().where(Profesores.dni == primary).get()
 
         elif tabla == "Alumnos":
-            entidad = Alumnos.select().where(Alumnos.nombre == primary[0] &
-                                             Alumnos.apellido == primary[1]).get()
+            entidad = Alumnos.select().where(Alumnos.nombre == primary['nombre'] &
+                                             Alumnos.apellido == primary['apellido']).get()
 
         elif tabla == "Cursos":
             entidad = Cursos.select().where(Cursos.nombre == primary).get()
 
         elif tabla == "Cursos_Profesores":
-            entidad = Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary[0] &
-                                                       Cursos_Profesores.id_prof == primary[1]).get()
+            entidad = Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary['cod_curs'] &
+                                                       Cursos_Profesores.id_prof == primary['id_prof']).get()
 
         elif tabla == "Cursos_Alumnos":
-            entidad = Cursos_Alumnos.select().where(Cursos_Alumnos.cod_curs == primary[0] &
-                                                    Cursos_Alumnos.num_exp == primary[1]).get()
+            entidad = Cursos_Alumnos.select().where(Cursos_Alumnos.cod_curs == primary['cod_curs'] &
+                                                    Cursos_Alumnos.num_exp == primary['num_exp']).get()
 
         return entidad
     except:
         print("Fallos en la seleccion")
         print(traceback.format_exc())
-        return False
+        return None
 
 
 conn = None
