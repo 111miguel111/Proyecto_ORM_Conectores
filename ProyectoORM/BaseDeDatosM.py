@@ -5,6 +5,7 @@ import Utiles
 import sys
 import traceback
 
+
 def escanerNumerico():
     '''
     Metodo para escanear una cadena con solo numeros
@@ -21,6 +22,7 @@ def escanerNumerico():
         print('Porfavor introduce numeros no decimales')
     print("Has superado el numero de intentos")
     return None
+
 
 def iniciarFicheroConfiguracion():
     '''
@@ -40,6 +42,7 @@ def iniciarFicheroConfiguracion():
         print("No se ha podido crear el fichero de configuracion")
     return 0
 
+
 def checkFileExistance(filePath):
     '''
     Comprueba que el fichero de configuracion existe
@@ -56,6 +59,7 @@ def checkFileExistance(filePath):
         print("El fichero de configuracion no existe")
     except IOError as e:
         return False
+
 
 def checkConfigBien(filePath):
     '''
@@ -111,6 +115,7 @@ def checkConfigBien(filePath):
         print("El campo " + campo + " falta o esta mal\n")
         return False
 
+
 def conectarse(conn):
     '''
     Funcion encargada de usar la base de datos y devolver un cursor
@@ -120,6 +125,7 @@ def conectarse(conn):
     cur = conn.cursor()
     cur.execute('USE miguel_roberto')
     return cur
+
 
 def deconectarse(conn):
     '''
@@ -131,6 +137,7 @@ def deconectarse(conn):
     conn.close()
     print("La conexion ha terminado ")
     return 0
+
 
 def mysqlconnect():
     '''
@@ -174,6 +181,7 @@ def mysqlconnect():
             print("El programa se cerrara")
             sys.exit()  # Cerramos el programa ya que no deberia continuar tras este error
 
+
 def conectarAPeewee():
     try:
         config = configparser.ConfigParser()
@@ -210,6 +218,7 @@ def conectarAPeewee():
             print("Opcion no valida, el programa se cerrara")
             sys.exit()  # Cerramos el programa ya que no deberia continuar tras este error
 
+
 def crearTablasPeewee():
     try:
         conn.create_tables([Profesores, Alumnos, Cursos, Cursos_Profesores, Cursos_Alumnos])
@@ -219,6 +228,7 @@ def crearTablasPeewee():
         print("No se pudieron crear las tablas.")
     
     return 0
+
 
 def iniciar():
     '''
@@ -255,7 +265,8 @@ def iniciar():
         conn.close()
         return True  # Devuelve true si todo ha ido bien
     except:
-        return False # Devuelve false si algo ha ido muy mal
+        return False  # Devuelve false si algo ha ido muy mal
+
 
 def insert(tabla, datos):
     """
@@ -299,6 +310,7 @@ def insert(tabla, datos):
         print(traceback.format_exc())
         return False
 
+
 def delete(tabla, primary):
     """
     Funcion encargada de la realizacion de los inserts en la bbdd.
@@ -311,7 +323,7 @@ def delete(tabla, primary):
             borrar.execute()
 
         elif tabla == "Alumnos":
-            borrar = Alumnos.delete().where(Alumnos.nombre == primary['nombre'] &
+            borrar = Alumnos.delete().where(Alumnos.nombre == primary['nombre'] & 
                                                  Alumnos.apellido == primary['apellido'])
             borrar.execute()
 
@@ -320,12 +332,12 @@ def delete(tabla, primary):
             borrar.execute()
 
         elif tabla == "Cursos_Profesores":
-            borrar = Cursos_Profesores.delete().where(Cursos.cod_curs == primary['cod_curs'] &
+            borrar = Cursos_Profesores.delete().where(Cursos.cod_curs == primary['cod_curs'] & 
                                                            Profesores.id_prof == primary['id_prof'])
             borrar.execute()
 
         elif tabla == "Cursos_Alumnos":
-            borrar = Cursos_Alumnos.delete().where(Cursos.cod_curs == primary['cod_curs'] &
+            borrar = Cursos_Alumnos.delete().where(Cursos.cod_curs == primary['cod_curs'] & 
                                                            Alumnos.num_exp == primary['num_exp'])
             borrar.execute()
 
@@ -334,42 +346,43 @@ def delete(tabla, primary):
         print("Fallos en la insercion")
         print(traceback.format_exc())
         return False
+
+
 #-------------------------------------------------------------------------------------------------
 def update(tabla, campo, primary, dato):
     try:
         if tabla == "Profesores":
-            if campo=="dni":
-                Profesores.update(dni=dato).where(Profesores.dni==primary).execute()
-            elif campo=="nombre":
-                Profesores.update(nombre=dato).where(Profesores.dni==primary).execute()
-            elif campo=="telefono":
-                Profesores.update(telefono=dato).where(Profesores.dni==primary).execute()
-            elif campo=="direccion":
-                Profesores.update(direccion=dato).where(Profesores.dni==primary).execute()
+            if campo == "dni":
+                Profesores.update(dni=dato).where(Profesores.dni == primary).execute()
+            elif campo == "nombre":
+                Profesores.update(nombre=dato).where(Profesores.dni == primary).execute()
+            elif campo == "telefono":
+                Profesores.update(telefono=dato).where(Profesores.dni == primary).execute()
+            elif campo == "direccion":
+                Profesores.update(direccion=dato).where(Profesores.dni == primary).execute()
 
         elif tabla == "Alumnos":
-            if campo=="nombre":
-                Alumnos.update(nombre=dato).where(Alumnos.nombre == primary['nombre'] &
+            if campo == "nombre":
+                Alumnos.update(nombre=dato).where(Alumnos.nombre == primary['nombre'] & 
                                                  Alumnos.apellido == primary['apellido']).execute()
-            elif campo=="apellido":
-                Alumnos.update(apellido=dato).where(Alumnos.nombre == primary['nombre'] &
+            elif campo == "apellido":
+                Alumnos.update(apellido=dato).where(Alumnos.nombre == primary['nombre'] & 
                                                  Alumnos.apellido == primary['apellido']).execute()
-            elif campo=="telefono":
-                Alumnos.update(telefono=dato).where(Alumnos.nombre == primary['nombre'] &
+            elif campo == "telefono":
+                Alumnos.update(telefono=dato).where(Alumnos.nombre == primary['nombre'] & 
                                                  Alumnos.apellido == primary['apellido']).execute()
-            elif campo=="direccion":
-                Alumnos.update(direccion=dato).where(Alumnos.nombre == primary['nombre'] &
+            elif campo == "direccion":
+                Alumnos.update(direccion=dato).where(Alumnos.nombre == primary['nombre'] & 
                                                  Alumnos.apellido == primary['apellido']).execute()
-            elif campo=="fech_nacim":
-                Alumnos.update(fech_nacim=dato).where(Alumnos.nombre == primary['nombre'] &
+            elif campo == "fech_nacim":
+                Alumnos.update(fech_nacim=dato).where(Alumnos.nombre == primary['nombre'] & 
                                                  Alumnos.apellido == primary['apellido']).execute()
         elif tabla == "Cursos":
             
-            if campo=="nombre":
+            if campo == "nombre":
                 Cursos.update(nombre=dato).where(Cursos.nombre == primary).execute()
-            elif campo=="descripcion":
+            elif campo == "descripcion":
                 Cursos.update(descripcion=dato).where(Cursos.nombre == primary).execute()
-
 
         return True
     except:
@@ -378,6 +391,8 @@ def update(tabla, campo, primary, dato):
         return False
     
     return 0
+
+
 def selectAll(tabla):
     try:
         lista = ()
@@ -397,6 +412,8 @@ def selectAll(tabla):
         print(traceback.format_exc())
         return None
     return 0
+
+
 def select1(tabla, primary):
     try:
         entidad = None
@@ -404,18 +421,50 @@ def select1(tabla, primary):
             entidad = Profesores.select().where(Profesores.dni == primary).get()
 
         elif tabla == "Alumnos":
-            entidad = Alumnos.select().where(Alumnos.nombre == primary['nombre'] &
+            entidad = Alumnos.select().where(Alumnos.nombre == primary['nombre'] & 
                                              Alumnos.apellido == primary['apellido']).get()
 
         elif tabla == "Cursos":
             entidad = Cursos.select().where(Cursos.nombre == primary).get()
 
         elif tabla == "Cursos_Profesores":
-            entidad = Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary['cod_curs'] &
+            entidad = Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary['cod_curs'] & 
                                                        Cursos_Profesores.id_prof == primary['id_prof']).get()
 
         elif tabla == "Cursos_Alumnos":
-            entidad = Cursos_Alumnos.select().where(Cursos_Alumnos.cod_curs == primary['cod_curs'] &
+            entidad = Cursos_Alumnos.select().where(Cursos_Alumnos.cod_curs == primary['cod_curs'] & 
+                                                    Cursos_Alumnos.num_exp == primary['num_exp']).get()
+
+        return entidad
+    except:
+        print("Fallos en la seleccion")
+        print(traceback.format_exc())
+        return None
+def selectJoin(tabla, primary):
+    try:
+        entidad = None
+        if tabla == "Profesores":
+            entidad = Profesores.select().where(Profesores.dni == primary).get()
+            cursosProf = Cursos.select(Cursos.nombre).join(Profesores, Cursos_Profesores).where(Profesores.dni == primary & Profesores.id_prof==Cursos_Profesores.id_prof & Cursos.cod_curs==Cursos_Profesores.cod_curs).get()
+            entidad.append(cursosProf)
+            
+        elif tabla == "Alumnos":
+            entidad = Alumnos.select().where(Alumnos.nombre == primary['nombre'] & Alumnos.apellido == primary['apellido']).get()
+            cursosAlum = Curos.select(Cursos.nombre).join(Alumnos, Cursos_Alumnos).where(Alumnos.nombre == primary['nombre'] & Alumnos.apellido == primary['apellido'] & Alumnos.num_exp==Cursos_Alumnos.num_exp & Cursos.cod_curs==Cursos_Alumnos.cod_curs ).get()
+            entidad.append(cursosAlum)
+        elif tabla == "Cursos":
+            entidad = Cursos.select().where(Cursos.nombre == primary).get()
+            profCurs= Profesores.select(Profesores.nombre).join(Cursos, Cursos_Profesores).where(Cursos.nombre == primary & Cursos.cod_curs==Cursos_Profesores.cod_curs & Profesores.id_prof==Cursos_Profesores.id_prof).get()
+            alumCurs= Alumnos.select(Alumnos.nombre , Alumnos.apellido).join(Cursos , Cursos_Alumnos).where(Cursos.nombre == primary & Cursos.cod_curs==Cursos_Alumnos.cod_curs & Alumnos.num_exp==Cursos_Alumnos.num_exp).get()
+            entidad.append(profCurs)
+            entidad.append(alumCurs)
+            
+        elif tabla == "Cursos_Profesores":
+            entidad = Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary['cod_curs'] & 
+                                                       Cursos_Profesores.id_prof == primary['id_prof']).get()
+
+        elif tabla == "Cursos_Alumnos":
+            entidad = Cursos_Alumnos.select().where(Cursos_Alumnos.cod_curs == primary['cod_curs'] & 
                                                     Cursos_Alumnos.num_exp == primary['num_exp']).get()
 
         return entidad
@@ -425,16 +474,18 @@ def select1(tabla, primary):
         return None
 #-------------------------------------------------
 
-conn=None
-#ES LA MIERDA MAS GRANDE DE LA NOCHE TAL VEZ, HE PROBADO UN MONTON DE COSAS, TAMBIEN, FUNCIONA COMO UN TIRO, ALSO YES
+
+conn = None
+# ES LA MIERDA MAS GRANDE DE LA NOCHE TAL VEZ, HE PROBADO UN MONTON DE COSAS, TAMBIEN, FUNCIONA COMO UN TIRO, ALSO YES
 if (iniciar()):
-    conn=conectarAPeewee()#SOLO SE CONECTA Y DEVULEVE CONN NADA MAS
+    conn = conectarAPeewee()  # SOLO SE CONECTA Y DEVULEVE CONN NADA MAS
 else:
     sys.exit()  # Cerramos el programa ya que no deberia continuar tras este error
 
-#LOS CLASS NO HE ENCONTRADO LA MANERA DE QUE ESTEN DENTRO DE UNA FUNCION, POR COJONES ESTAN FUERA 
-#A LA HORA DEL CONN NO ME GUSTA HACERLO GLOBAL PORQUE NO ME GUSTA
-#LA OTRA OPCION ESQUE EN CADA "database = conn" PONER "database = conestarAPeewee()" PERO ESO CREO QUE ES PEOR QUE UN CONN GLOBAL
+# LOS CLASS NO HE ENCONTRADO LA MANERA DE QUE ESTEN DENTRO DE UNA FUNCION, POR COJONES ESTAN FUERA 
+# A LA HORA DEL CONN NO ME GUSTA HACERLO GLOBAL PORQUE NO ME GUSTA
+# LA OTRA OPCION ESQUE EN CADA "database = conn" PONER "database = conestarAPeewee()" PERO ESO CREO QUE ES PEOR QUE UN CONN GLOBAL
+
  
 class Profesores(Model):
     id_prof = AutoField()  # Equivale al auto_increment
@@ -446,6 +497,7 @@ class Profesores(Model):
     class Meta:
         database = conn
 
+
 class Alumnos(Model):
     num_exp = AutoField()  # Equivale al auto_increment
     nombre = CharField(null=False)
@@ -456,9 +508,10 @@ class Alumnos(Model):
 
     class Meta:
         database = conn
-        indexes = (  # Para hacer que la combinacion de campos sea unique
+        indexes = (# Para hacer que la combinacion de campos sea unique
             (('nombre', 'apellido'), True),
         )
+
 
 class Cursos(Model):
     cod_curs = AutoField()  # Equivale al auto_increment
@@ -468,6 +521,7 @@ class Cursos(Model):
     class Meta:
         database = conn
 
+
 class Cursos_Profesores(Model):
     cod_curs = ForeignKeyField(Cursos, on_delete='CASCADE', on_update='CASCADE')
     id_prof = ForeignKeyField(Profesores, on_delete='CASCADE', on_update='CASCADE')
@@ -475,6 +529,7 @@ class Cursos_Profesores(Model):
     class Meta:
         database = conn
         primary_key = CompositeKey('cod_curs', 'id_prof')
+
 
 class Cursos_Alumnos(Model):
     cod_curs = ForeignKeyField(Cursos, on_delete='CASCADE', on_update='CASCADE')
@@ -484,6 +539,7 @@ class Cursos_Alumnos(Model):
         database = conn
         primary_key = CompositeKey('cod_curs', 'num_exp')
 
-#SI INTENTO PONER EL CREAR TABLAS EN CAULQUIER OTRO SITIO QUE NO SEA JUSTAMENTE DESPUES DE LOS CLASS ME DICE QUE LAS CLASSES NO ESTAN DEFINIDAS
-#Y OBVIAMENTE SI EL IF DE MIERDA LOPONGO AQUI ABAJO LAS CLASES ME DICEN QUE CONN NO ESTA DEFINIDA
+
+# SI INTENTO PONER EL CREAR TABLAS EN CAULQUIER OTRO SITIO QUE NO SEA JUSTAMENTE DESPUES DE LOS CLASS ME DICE QUE LAS CLASSES NO ESTAN DEFINIDAS
+# Y OBVIAMENTE SI EL IF DE MIERDA LOPONGO AQUI ABAJO LAS CLASES ME DICEN QUE CONN NO ESTA DEFINIDA
 crearTablasPeewee()
