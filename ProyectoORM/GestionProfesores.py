@@ -73,6 +73,67 @@ def baja():
         print("-" * 20 + "\n")
 
 
+def modificacion(profesor):
+    elec = ""
+    while elec != "0":
+        elec = input("1. Nombre\n2. DNI\n3. Telefono\n4. Direccion\n0. Volver\n")
+        if elec == "1":
+            nueNomb = Utiles.check_campo("nombre", 25)
+            if nueNomb is not None:
+                if Utiles.confirmacion(
+                        "Seguro que desea modificar el nombre " + profesor.nombre + " por " + nueNomb + "?"):
+                    if BaseDeDatosM.update("Profesores", "nombre", profesor.dni, nueNomb):
+                        print("Modificacion realizda con exito." + '\n')
+                    else:
+                        print("La modificacion no se pudo realizar." + '\n')
+                else:
+                    print("Modificacion cancelada." + '\n')
+
+        elif elec == "2":
+            nueDni = Utiles.check_dni()
+            if nueDni is not None and GestorBaseDeDatos.select1("Profesores", nueDni) is None:
+                if Utiles.confirmacion("Seguro que desea modificar el dni " + profesor.dni + " por " + nueDni + "?"):
+                    if BaseDeDatosM.update("Profesores", "dni", profesor.dni, nueDni):
+                        print("Modificacion realizda con exito." + '\n')
+                    else:
+                        print("La modificacion no se pudo realizar." + '\n')
+                else:
+                    print("Modificacion cancelada." + '\n')
+
+            else:
+                if GestorBaseDeDatos.select1("Profesores", nueDni) is not None:
+                    print("El dni pertenece a otro profesor ya existente")
+
+        elif elec == "3":
+            nueTelf = Utiles.check_telefono()
+            if nueTelf is not None:
+                if Utiles.confirmacion(
+                        "Seguro que desea modificar el telefono " + profesor.telefono + " por " + nueTelf + "?"):
+                    if BaseDeDatosM.update("Profesores", "telefono", profesor.dni, nueTelf):
+                        print("Modificacion realizda con exito." + '\n')
+                    else:
+                        print("La modificacion no se pudo realizar." + '\n')
+                else:
+                    print("Modificacion cancelada." + '\n')
+
+        elif elec == "4":
+            nueDire = Utiles.check_campo("direccion", 25)
+            if nueDire is not None:
+                if Utiles.confirmacion(
+                        "Seguro que desea modificar la direccion " + profesor.direccion + " por " + nueDire + "?"):
+                    if BaseDeDatosM.update("Profesores", "direccion", profesor.dni, nueDire):
+                        print("Modificacion realizda con exito." + '\n')
+                    else:
+                        print("La modificacion no se pudo realizar." + '\n')
+                else:
+                    print("Modificacion cancelada." + '\n')
+
+        elif elec == "0":
+            print("Saliendo de menu de modificacion." + "\n")
+        else:
+            print("Opticon no valida")
+
+
 def modificar():
     if len(GestorBaseDeDatos.Profesores.select()) > 0:
         print("Modificacion profesor:")
@@ -96,65 +157,6 @@ def modificar():
     else:
         print("No hay profesores creados")
         print("-" * 20 + "\n")
-
-
-def modificacion(profesor):
-    elec = ""
-    while elec != "0":
-        elec = input("1. Nombre\n2. DNI\n3. Telefono\n4. Direccion\n0. Volver\n")
-        if elec == "1":
-            nueNomb = Utiles.check_campo("nombre", 25)
-            if nueNomb is not None:
-                if Utiles.confirmacion("Seguro que desea modificar el nombre " + profesor.nombre + " por " + nueNomb + "?"):
-                    if BaseDeDatosM.update("Profesores", "nombre", profesor.dni, nueNomb):
-                        print("Modificacion realizda con exito." + '\n')
-                    else:
-                        print("La modificacion no se pudo realizar." + '\n')
-                else:
-                    print("Baja cancelada." + '\n')
-
-        elif elec == "2":
-            nueDni = Utiles.check_dni()
-            if nueDni is not None and GestorBaseDeDatos.select1("Profesores", nueDni) is None:
-                if Utiles.confirmacion("Seguro que desea modificar el dni " + profesor.dni + " por " + nueDni + "?"):
-                    if BaseDeDatosM.update("Profesores", "dni", profesor.dni, nueDni):
-                        print("Modificacion realizda con exito." + '\n')
-                    else:
-                        print("La modificacion no se pudo realizar." + '\n')
-                else:
-                    print("Baja cancelada." + '\n')
-
-            else:
-                if GestorBaseDeDatos.select1("Profesores", nueDni) is not None:
-                    print("El dni pertenece a otro profesor ya existente")
-                
-        elif elec == "3":
-            nueTelf = Utiles.check_telefono()
-            if nueTelf is not None:
-                if Utiles.confirmacion(
-                        "Seguro que desea modificar el telefono " + profesor.telefono + " por " + nueTelf + "?"):
-                    if BaseDeDatosM.update("Profesores", "telefono", profesor.dni, nueTelf):
-                        print("Modificacion realizda con exito." + '\n')
-                    else:
-                        print("La modificacion no se pudo realizar." + '\n')
-                else:
-                    print("Baja cancelada." + '\n')
-        elif elec == "4":
-            nueDire = Utiles.check_campo("direccion", 25)
-            if nueDire is not None:
-                if Utiles.confirmacion(
-                        "Seguro que desea modificar la direccion " + profesor.direccion + " por " + nueDire + "?"):
-                    if BaseDeDatosM.update("Profesores", "direccion", profesor.dni, nueDire):
-                        print("Modificacion realizda con exito." + '\n')
-                    else:
-                        print("La modificacion no se pudo realizar." + '\n')
-                else:
-                    print("Baja cancelada." + '\n')
-
-        elif elec == "0":
-            print("Saliendo de menu de modificacion." + "\n")
-        else:
-            print("Opticon no valida")
 
 
 def buscar():
