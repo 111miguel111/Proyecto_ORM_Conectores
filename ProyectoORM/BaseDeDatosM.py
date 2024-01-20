@@ -339,13 +339,13 @@ def update(tabla, campo, primary, dato):
     try:
         if tabla == "Profesores":
             if campo=="dni":
-                Profesor.update(dni=dato).where(Profesores.dni==primary).execute()
+                Profesores.update(dni=dato).where(Profesores.dni==primary).execute()
             elif campo=="nombre":
-                Profesor.update(nombre=dato).where(Profesores.dni==primary).execute()
+                Profesores.update(nombre=dato).where(Profesores.dni==primary).execute()
             elif campo=="telefono":
-                Profesor.update(telefono=dato).where(Profesores.dni==primary).execute()
+                Profesores.update(telefono=dato).where(Profesores.dni==primary).execute()
             elif campo=="direccion":
-                Profesor.update(direccion=dato).where(Profesores.dni==primary).execute()
+                Profesores.update(direccion=dato).where(Profesores.dni==primary).execute()
 
         elif tabla == "Alumnos":
             if campo=="nombre":

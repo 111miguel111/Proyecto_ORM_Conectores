@@ -101,12 +101,12 @@ def modificar():
 def modificacion(profesor):
     elec = ""
     while elec != "0":
-        elec = input("1. Nombre\n2. DNI\n3. Telefono\n4. Direccion\n")
+        elec = input("1. Nombre\n2. DNI\n3. Telefono\n4. Direccion\n0. Volver\n")
         if elec == "1":
             nueNomb = Utiles.check_campo("nombre", 25)
             if nueNomb is not None:
                 if Utiles.confirmacion("Seguro que desea modificar el nombre " + profesor.nombre + " por " + nueNomb + "?"):
-                    if BaseDeDatosM.update("Profesores", "nombre", profesor.nombre, nueNomb):
+                    if BaseDeDatosM.update("Profesores", "nombre", profesor.dni, nueNomb):
                         print("Modificacion realizda con exito." + '\n')
                     else:
                         print("La modificacion no se pudo realizar." + '\n')
@@ -127,13 +127,13 @@ def modificacion(profesor):
             else:
                 if GestorBaseDeDatos.select1("Profesores", nueDni) is not None:
                     print("El dni pertenece a otro profesor ya existente")
-
+                
         elif elec == "3":
             nueTelf = Utiles.check_telefono()
             if nueTelf is not None:
                 if Utiles.confirmacion(
                         "Seguro que desea modificar el telefono " + profesor.telefono + " por " + nueTelf + "?"):
-                    if BaseDeDatosM.update("Profesores", "telefono", profesor.telefono, nueTelf):
+                    if BaseDeDatosM.update("Profesores", "telefono", profesor.dni, nueTelf):
                         print("Modificacion realizda con exito." + '\n')
                     else:
                         print("La modificacion no se pudo realizar." + '\n')
@@ -144,7 +144,7 @@ def modificacion(profesor):
             if nueDire is not None:
                 if Utiles.confirmacion(
                         "Seguro que desea modificar la direccion " + profesor.direccion + " por " + nueDire + "?"):
-                    if BaseDeDatosM.update("Profesores", "direccion", profesor.direccion, nueDire):
+                    if BaseDeDatosM.update("Profesores", "direccion", profesor.dni, nueDire):
                         print("Modificacion realizda con exito." + '\n')
                     else:
                         print("La modificacion no se pudo realizar." + '\n')
