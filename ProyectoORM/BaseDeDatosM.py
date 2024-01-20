@@ -334,75 +334,96 @@ def delete(tabla, primary):
         print("Fallos en la insercion")
         print(traceback.format_exc())
         return False
-    
-def update(tabla, id, campo, dato):
+#-------------------------------------------------------------------------------------------------
+def update(tabla, campo, primary, dato):
     try:
         if tabla == "Profesores":
             if campo=="dni":
-                Profesor.update(dni=dato).where(Profesores.dni==id).execute()
+                Profesor.update(dni=dato).where(Profesores.dni==primary).execute()
             elif campo=="nombre":
-                Profesor.update(nombre=dato).where(Profesores.dni==id).execute()
+                Profesor.update(nombre=dato).where(Profesores.dni==primary).execute()
             elif campo=="telefono":
-                Profesor.update(telefono=dato).where(Profesores.dni==id).execute()
+                Profesor.update(telefono=dato).where(Profesores.dni==primary).execute()
             elif campo=="direccion":
-                Profesor.update(direccion=dato).where(Profesores.dni==id).execute()
+                Profesor.update(direccion=dato).where(Profesores.dni==primary).execute()
 
         elif tabla == "Alumnos":
-            actualizar = Alumnos.delete().where(Alumnos.nombre == primary['nombre'] &
-                                                 Alumnos.apellido == primary['apellido'])
-            actualizar.execute()
-
+            if campo=="nombre":
+                Alumnos.update(nombre=dato).where(Alumnos.nombre == primary['nombre'] &
+                                                 Alumnos.apellido == primary['apellido']).execute()
+            elif campo=="apellido":
+                Alumnos.update(apellido=dato).where(Alumnos.nombre == primary['nombre'] &
+                                                 Alumnos.apellido == primary['apellido']).execute()
+            elif campo=="telefono":
+                Alumnos.update(telefono=dato).where(Alumnos.nombre == primary['nombre'] &
+                                                 Alumnos.apellido == primary['apellido']).execute()
+            elif campo=="direccion":
+                Alumnos.update(direccion=dato).where(Alumnos.nombre == primary['nombre'] &
+                                                 Alumnos.apellido == primary['apellido']).execute()
+            elif campo=="fech_nacim":
+                Alumnos.update(fech_nacim=dato).where(Alumnos.nombre == primary['nombre'] &
+                                                 Alumnos.apellido == primary['apellido']).execute()
         elif tabla == "Cursos":
-            actualizar = Cursos.delete().where(Cursos.nombre == primary)
-            actualizar.execute()
+            
+            if campo=="nombre":
+                Cursos.update(nombre=dato).where(Cursos.nombre == primary).execute()
+            elif campo=="descripcion":
+                Cursos.update(descripcion=dato).where(Cursos.nombre == primary).execute()
 
-        elif tabla == "Cursos_Profesores":
-            actualizar = Cursos_Profesores.delete().where(Cursos.cod_curs == primary['cod_curs'] &
-                                                           Profesores.id_prof == primary['id_prof'])
-            actualizar.execute()
-
-        elif tabla == "Cursos_Alumnos":
-            actualizar = Cursos_Alumnos.delete().where(Cursos.cod_curs == primary['cod_curs'] &
-                                                           Alumnos.num_exp == primary['num_exp'])
-            actualizar.execute()
 
         return True
     except:
-        print("Fallos en la insercion")
+        print("Fallos en la actualizacion")
+        print(traceback.format_exc())
+        return False
     
     return 0
-
 def selectAll(tabla):
     try:
-        
+        lista = ()
         if tabla == "Profesores":
             lista = list(Profesores.select().dicts())
-            for X in lista:
-                print (X)
         elif tabla == "Alumnos":
             lista = list(Alumnos.select().dicts())
-            for X in lista:
-                print (X)
         elif tabla == "Cursos":
             lista = list(Cursos.select().dicts())
-            for X in lista:
-                print (X)
         elif tabla == "Cursos_Profesores":
             lista = list(Cursos_Profesores.select().dicts())
-            for X in lista:
-                print (X)
         elif tabla == "Cursos_Alumnos":
             lista = list(Cursos_Alumnos.select().dicts())
-            for X in lista:
-                print (X)
-
-        return True
+        return lista
     except:
         print("Fallos en la seleccion")
         print(traceback.format_exc())
-        return False
+        return None
     return 0
+def select1(tabla, primary):
+    try:
+        entidad = None
+        if tabla == "Profesores":
+            entidad = Profesores.select().where(Profesores.dni == primary).get()
 
+        elif tabla == "Alumnos":
+            entidad = Alumnos.select().where(Alumnos.nombre == primary['nombre'] &
+                                             Alumnos.apellido == primary['apellido']).get()
+
+        elif tabla == "Cursos":
+            entidad = Cursos.select().where(Cursos.nombre == primary).get()
+
+        elif tabla == "Cursos_Profesores":
+            entidad = Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary['cod_curs'] &
+                                                       Cursos_Profesores.id_prof == primary['id_prof']).get()
+
+        elif tabla == "Cursos_Alumnos":
+            entidad = Cursos_Alumnos.select().where(Cursos_Alumnos.cod_curs == primary['cod_curs'] &
+                                                    Cursos_Alumnos.num_exp == primary['num_exp']).get()
+
+        return entidad
+    except:
+        print("Fallos en la seleccion")
+        print(traceback.format_exc())
+        return None
+#-------------------------------------------------
 
 conn=None
 #ES LA MIERDA MAS GRANDE DE LA NOCHE TAL VEZ, HE PROBADO UN MONTON DE COSAS, TAMBIEN, FUNCIONA COMO UN TIRO, ALSO YES
