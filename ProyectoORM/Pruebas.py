@@ -1,7 +1,12 @@
 import GestorBaseDeDatos
 import GestionProfesores
+import GestionCursos
+import GestionAlumnos
 
 conn = GestorBaseDeDatos.iniciar()
+
+#Profesores
+#-----------------------------------------------------------------
 
 #GestionProfesores.alta()
 
@@ -11,6 +16,32 @@ conn = GestorBaseDeDatos.iniciar()
 
 #GestionProfesores.buscar()
 
-GestionProfesores.mostarTodos()
+#GestionProfesores.mostarTodos()
+
+#Alumnos
+#-----------------------------------------------------------------
+
+#GestionAlumnos.alta()
+
+#GestionAlumnos.baja()
+
+#GestionAlumnos.modificar()
+
+#GestionAlumnos.buscar()
+
+#GestionAlumnos.mostrarTodos()
+
+#Cursos
+#-----------------------------------------------------------------
+
+#GestionCursos.alta()
+
+#GestionCursos.baja()
+
+#GestionCursos.modificar()
+
+#GestionCursos.buscar()
+
+#GestionCursos.mostrarTodos()
 
 conn.close()
