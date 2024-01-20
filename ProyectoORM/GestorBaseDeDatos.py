@@ -449,9 +449,7 @@ class Cursos(Model):
 
 class Cursos_Profesores(Model):
     cod_curs = ForeignKeyField(Cursos, on_delete='CASCADE', on_update='CASCADE')
-    nombre_curs = CharField(null=False)
     id_prof = ForeignKeyField(Profesores, on_delete='CASCADE', on_update='CASCADE')
-    nombre_prof = CharField(null=False)
 
     class Meta:
         database = conn
@@ -460,9 +458,7 @@ class Cursos_Profesores(Model):
 
 class Cursos_Alumnos(Model):
     cod_curs = ForeignKeyField(Cursos, on_delete='CASCADE', on_update='CASCADE')
-    nombre_curs = CharField(null=False)
     num_exp = ForeignKeyField(Alumnos, on_delete='CASCADE', on_update='CASCADE')
-    nombre_alum = CharField(null=False)
 
     class Meta:
         database = conn
