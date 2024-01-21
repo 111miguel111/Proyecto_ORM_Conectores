@@ -443,33 +443,25 @@ def select1(tabla, primary):
 def selectJoin(tabla, primary):
     try:
         entidad = None
-        if tabla == "Profesores":
-            entidad = Profesores.select().where(Profesores.dni == primary).get()
-            cursosProf = Cursos.select(Cursos.nombre).join(Profesores, Cursos_Profesores).where(Profesores.dni == primary & Profesores.id_prof==Cursos_Profesores.id_prof & Cursos.cod_curs==Cursos_Profesores.cod_curs).get()
-            entidad.append(cursosProf)
-            
-        elif tabla == "Alumnos":
-            entidad = Alumnos.select().where(Alumnos.nombre == primary['nombre'] & Alumnos.apellido == primary['apellido']).get()
-            cursosAlum = Cursos.select(Cursos.nombre).join(Alumnos, Cursos_Alumnos).where(Alumnos.nombre == primary['nombre'] & Alumnos.apellido == primary['apellido'] & Alumnos.num_exp==Cursos_Alumnos.num_exp & Cursos.cod_curs==Cursos_Alumnos.cod_curs ).get()
-            entidad.append(cursosAlum)
-        elif tabla == "Cursos":
-            entidad = list((Cursos.select(Cursos, Profesores.nombre, Profesores.dni)
-                    .join(Cursos_Profesores)
-                    .join(Profesores)
-                    .where(Cursos.cod_curs == primary & Cursos_Profesores.cod_curs == Cursos.cod_curs & Cursos_Profesores.id_prof == Profesores.id_prof)))
-            """entidad = Cursos.select().where(Cursos.nombre == primary).get()
-            profCurs= Profesores.select(Profesores.nombre).join(Cursos, Cursos_Profesores).where(Cursos.nombre == primary & Cursos.cod_curs==Cursos_Profesores.cod_curs & Profesores.id_prof==Cursos_Profesores.id_prof).get()
-            alumCurs= Alumnos.select(Alumnos.nombre , Alumnos.apellido).join(Cursos , Cursos_Alumnos).where(Cursos.nombre == primary & Cursos.cod_curs==Cursos_Alumnos.cod_curs & Alumnos.num_exp==Cursos_Alumnos.num_exp).get()
-            entidad.append(profCurs)
-            entidad.append(alumCurs)"""
-            
+        if tabla =="ProfesoresEnCursos":
+            #Si el profesor esta en Cursos_profesores
+            entidad=list((Profesores.select().join(Cursos_Profesores).where(Profesores.dni == primary & Profesores.id_prof==Cursos_Profesores.id_prof)))
+        elif tabla == "AlumnosEnCursos":
+            #Si el alumno esta en Cursos_alumnos
+            entidad= list((Alumnos.select().join(Cursos_Alumnos).where(Alumnos.nombre == primary['nombre'] & Alumnos.apellido == primary['apellido'] & Alumnos.num_exp==Cursos_Alumnos.num_exp)))
+        elif tabla=="CursosEnAlumnos":
+            #Si el curso esta en Cursos_alumnos
+            entidad=list((Cursos.select().join(Cursos_Alumnos).where(Cursos.cod_curs == primary & Cursos.cod_curs==Cursos_Alumnos.cod_curs)))
+        elif tabla=="CursosEnAlumnos":
+             #Si el curso esta en Cursos_profesores
+             entidad=list((Cursos.select().join(Cursos_Profesores).where(Cursos.cod_curs == primary & Cursos.cod_curs==Cursos_Profesores.cod_curs)))
         elif tabla == "Cursos_Profesores":
-            entidad = Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary['cod_curs'] & 
-                                                       Cursos_Profesores.id_prof == primary['id_prof']).get()
+            entidad = list((Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary['cod_curs'] & 
+                                                       Cursos_Profesores.id_prof == primary['id_prof'])))
 
         elif tabla == "Cursos_Alumnos":
-            entidad = Cursos_Alumnos.select().where(Cursos_Alumnos.cod_curs == primary['cod_curs'] & 
-                                                    Cursos_Alumnos.num_exp == primary['num_exp']).get()
+            entidad = list((Cursos_Alumnos.select().where(Cursos_Alumnos.cod_curs == primary['cod_curs'] & 
+                                                    Cursos_Alumnos.num_exp == primary['num_exp'])))
 
         return entidad
     except:
