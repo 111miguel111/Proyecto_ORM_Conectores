@@ -323,7 +323,7 @@ def delete(tabla, primary):
             borrar.execute()
 
         elif tabla == "Alumnos":
-            borrar = Alumnos.delete().where(Alumnos.nombre == primary['nombre'] & 
+            borrar = Alumnos.delete().where(Alumnos.nombre == primary['nombre'] , 
                                                  Alumnos.apellido == primary['apellido'])
             borrar.execute()
 
@@ -332,12 +332,12 @@ def delete(tabla, primary):
             borrar.execute()
 
         elif tabla == "Cursos_Profesores":
-            borrar = Cursos_Profesores.delete().where(Cursos.cod_curs == primary['cod_curs'] & 
+            borrar = Cursos_Profesores.delete().where(Cursos.cod_curs == primary['cod_curs'] , 
                                                            Profesores.id_prof == primary['id_prof'])
             borrar.execute()
 
         elif tabla == "Cursos_Alumnos":
-            borrar = Cursos_Alumnos.delete().where(Cursos.cod_curs == primary['cod_curs'] & 
+            borrar = Cursos_Alumnos.delete().where(Cursos.cod_curs == primary['cod_curs'] , 
                                                            Alumnos.num_exp == primary['num_exp'])
             borrar.execute()
 
@@ -363,19 +363,19 @@ def update(tabla, campo, primary, dato):
 
         elif tabla == "Alumnos":
             if campo == "nombre":
-                Alumnos.update(nombre=dato).where(Alumnos.nombre == primary['nombre'] & 
+                Alumnos.update(nombre=dato).where(Alumnos.nombre == primary['nombre'] , 
                                                  Alumnos.apellido == primary['apellido']).execute()
             elif campo == "apellido":
-                Alumnos.update(apellido=dato).where(Alumnos.nombre == primary['nombre'] & 
+                Alumnos.update(apellido=dato).where(Alumnos.nombre == primary['nombre'] , 
                                                  Alumnos.apellido == primary['apellido']).execute()
             elif campo == "telefono":
-                Alumnos.update(telefono=dato).where(Alumnos.nombre == primary['nombre'] & 
+                Alumnos.update(telefono=dato).where(Alumnos.nombre == primary['nombre'] , 
                                                  Alumnos.apellido == primary['apellido']).execute()
             elif campo == "direccion":
-                Alumnos.update(direccion=dato).where(Alumnos.nombre == primary['nombre'] & 
+                Alumnos.update(direccion=dato).where(Alumnos.nombre == primary['nombre'] , 
                                                  Alumnos.apellido == primary['apellido']).execute()
             elif campo == "fech_nacim":
-                Alumnos.update(fech_nacim=dato).where(Alumnos.nombre == primary['nombre'] & 
+                Alumnos.update(fech_nacim=dato).where(Alumnos.nombre == primary['nombre'] , 
                                                  Alumnos.apellido == primary['apellido']).execute()
         elif tabla == "Cursos":
             
@@ -421,18 +421,18 @@ def select1(tabla, primary):
             entidad = Profesores.select().where(Profesores.dni == primary).get()
 
         elif tabla == "Alumnos":
-            entidad = Alumnos.select().where(Alumnos.nombre == primary['nombre'] & 
+            entidad = Alumnos.select().where(Alumnos.nombre == primary['nombre'] , 
                                              Alumnos.apellido == primary['apellido']).get()
 
         elif tabla == "Cursos":
             entidad = Cursos.select().where(Cursos.nombre == primary).get()
 
         elif tabla == "Cursos_Profesores":
-            entidad = Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary['cod_curs'] & 
+            entidad = Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary['cod_curs'] , 
                                                        Cursos_Profesores.id_prof == primary['id_prof']).get()
 
         elif tabla == "Cursos_Alumnos":
-            entidad = Cursos_Alumnos.select().where(Cursos_Alumnos.cod_curs == primary['cod_curs'] & 
+            entidad = Cursos_Alumnos.select().where(Cursos_Alumnos.cod_curs == primary['cod_curs'] , 
                                                     Cursos_Alumnos.num_exp == primary['num_exp']).get()
 
         return entidad
@@ -445,26 +445,26 @@ def selectJoin(tabla, primary):
         entidad = None
         if tabla =="ProfesoresEnCursos":
             #Si el profesor esta en Cursos_profesores
-            entidad=list((Profesores.select().join(Cursos_Profesores).where(Profesores.dni == primary & Profesores.id_prof==Cursos_Profesores.id_prof)))
+            entidad=list((Profesores.select().join(Cursos_Profesores).where(Profesores.dni == primary , Profesores.id_prof==Cursos_Profesores.id_prof)))
         elif tabla == "AlumnosEnCursos":
             #Si el alumno esta en Cursos_alumnos
-            entidad= list((Alumnos.select().join(Cursos_Alumnos).where(Alumnos.nombre == primary['nombre'] & Alumnos.apellido == primary['apellido'] & Alumnos.num_exp==Cursos_Alumnos.num_exp)))
+            entidad= list((Alumnos.select().join(Cursos_Alumnos).where(Alumnos.nombre == primary['nombre'] , Alumnos.apellido == primary['apellido'] , Alumnos.num_exp==Cursos_Alumnos.num_exp)))
         elif tabla=="CursosEnAlumnos":
             #Si el curso esta en Cursos_alumnos
-            entidad=list((Cursos.select().join(Cursos_Alumnos).where(Cursos.nombre == primary & Cursos.cod_curs == Cursos_Alumnos.cod_curs)))
+            entidad=list((Cursos.select().join(Cursos_Alumnos).where(Cursos.nombre == primary , Cursos.cod_curs == Cursos_Alumnos.cod_curs)))
         elif tabla=="CursosEnProfesores":
              #Si el curso esta en Cursos_profesores
              entidad = list((Cursos
                            .select(Cursos)
                            .join(Cursos_Profesores)
-                           .where(Cursos.cod_curs == primary & Cursos.cod_curs == Cursos_Profesores.cod_curs)))
-             """entidad=list((Cursos.select(Cursos).join(Cursos_Profesores).where(Cursos.nombre == primary & Cursos.cod_curs == Cursos_Profesores.cod_curs)))"""
+                           .where(Cursos.cod_curs == primary , Cursos.cod_curs == Cursos_Profesores.cod_curs)))
+             """entidad=list((Cursos.select(Cursos).join(Cursos_Profesores).where(Cursos.nombre == primary , Cursos.cod_curs == Cursos_Profesores.cod_curs)))"""
         elif tabla == "Cursos_Profesores":
-            entidad = list((Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary['cod_curs'] & 
+            entidad = list((Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary['cod_curs'] , 
                                                        Cursos_Profesores.id_prof == primary['id_prof'])))
 
         elif tabla == "Cursos_Alumnos":
-            entidad = list((Cursos_Alumnos.select().where(Cursos_Alumnos.cod_curs == primary['cod_curs'] & 
+            entidad = list((Cursos_Alumnos.select().where(Cursos_Alumnos.cod_curs == primary['cod_curs'] , 
                                                     Cursos_Alumnos.num_exp == primary['num_exp'])))
 
         return entidad
@@ -504,7 +504,7 @@ class Alumnos(Model):
     apellido = CharField(null=False)
     telefono = CharField(null=False)
     direccion = CharField(null=False)
-    fech_nacim = DateField(formats=['%d-%b-%Y'], null=False)
+    fech_nacim = DateField(formats=['%d-%m-%Y'], null=False)
 
     class Meta:
         database = conn

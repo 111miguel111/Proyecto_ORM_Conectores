@@ -187,7 +187,7 @@ def check_fecha():
 
                         print("Fecha introducida con exito")
                         return datetime.strptime(str(dia) + "/" + str(mes) + "/" + str(year), "%d/%m/%Y").strftime(
-                            "%Y-%m-%d")
+                            "%d-%m-%Y")
                     else:
                         print(
                             "No se corresponde con una fecha valida: para mas info--> https://es.wikipedia.org/wiki/Mes")

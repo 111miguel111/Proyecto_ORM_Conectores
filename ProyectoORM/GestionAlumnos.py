@@ -3,7 +3,7 @@ import BaseDeDatosM
 import Utiles
 
 
-def alta(conn):
+def alta():
     print("Alta alumno:")
     done = False
     while not done:
@@ -19,21 +19,24 @@ def alta(conn):
         if apellido is not None:
             primary={'nombre':nombre,
                      'apellido':apellido}
-            alumno=GestorBaseDeDatos.selectOne("Alumnos",primary)
+            alumno=GestorBaseDeDatos.select1("Alumnos",primary)
         if alumno is None:
+            print(alumno, type(alumno))
             telefono = Utiles.check_telefono()
         else:
+            print(alumno, type(alumno))
+            print(alumno.nombre)
             print('El nombre y el apellido ya pertenece a otro alumno')
         if telefono is not None:
             direccion = Utiles.check_campo("direccion", 50)
         if direccion is not None:
-            fech_nacim=Utiles.checkcheck_fecha()
+            fech_nacim=Utiles.check_fecha()
         if fech_nacim is not None:
-            datos = {'nombre': dni,
-                     'apellido': nombre,
+            datos = {'nombre': nombre,
+                     'apellido': apellido,
                      'telefono': telefono,
                      'direccion': direccion,
-                     'fech_nacim': telefono}
+                     'fech_nacim': fech_nacim}
 
             if GestorBaseDeDatos.insert('Alumnos', datos):
                 print('Alta realizada con exito'+'\n')
@@ -81,6 +84,7 @@ def buscar():
     primary={}
     nombre = Utiles.check_campo("nombre",25)
     if nombre is not None:
+        print("Introduzca el apellido del alumno.")
         apellido = Utiles.check_campo("apellido", 25)
     if apellido is not None:
         primary={'nombre':nombre,
@@ -126,7 +130,7 @@ def modificacion(alumno):
                 
                 if GestorBaseDeDatos.select1("Alumnos", primaryAux) is None:
                     if Utiles.confirmacion("Seguro que desea modificar el nombre " + alumno.nombre + " por " + nombre + "?"):
-                        if BaseDeDatosM.update("Alumnos", "nombre", primary, nombre):
+                        if GestorBaseDeDatos.update("Alumnos", "nombre", primary, nombre):
                             alumno=GestorBaseDeDatos.select1("Alumnos", primaryAux)
                             primary={'nombre':alumno.nombre,
                                      'apellido':alumno.apellido}
@@ -146,7 +150,7 @@ def modificacion(alumno):
                 
                 if GestorBaseDeDatos.select1("Alumnos", primaryAux) is None:
                     if Utiles.confirmacion("Seguro que desea modificar el apellido " + alumno.apellido + " por " + apellido + "?"):
-                        if BaseDeDatosM.update("Alumnos", "apellido", primary, apellido):
+                        if GestorBaseDeDatos.update("Alumnos", "apellido", primary, apellido):
                             alumno=GestorBaseDeDatos.select1("Alumnos", primaryAux)
                             primary={'nombre':alumno.nombre,
                                      'apellido':alumno.apellido}
@@ -162,7 +166,7 @@ def modificacion(alumno):
             telefono = Utiles.check_telefono()
             if telefono is not None:
                 if Utiles.confirmacion("Seguro que desea modificar el telefono " + alumno.telefono + " por " + telefono + "?"):
-                    if BaseDeDatosM.update("Alumnos", "telefono", primary, telefono):
+                    if GestorBaseDeDatos.update("Alumnos", "telefono", primary, telefono):
                         alumno=GestorBaseDeDatos.select1("Alumnos", primary)
                         print("Modificacion realizda con exito." + '\n')
                     else:
@@ -173,7 +177,7 @@ def modificacion(alumno):
             direccion = Utiles.check_campo("direccion", 50)
             if direccion is not None:
                 if Utiles.confirmacion("Seguro que desea modificar la direccion " + alumno.direccion + " por " + direccion + "?"):
-                    if BaseDeDatosM.update("Alumnos", "direccion", primary, direccion):
+                    if GestorBaseDeDatos.update("Alumnos", "direccion", primary, direccion):
                         alumno=GestorBaseDeDatos.select1("Alumnos", primary)
                         print("Modificacion realizda con exito." + '\n')
                     else:
@@ -184,7 +188,7 @@ def modificacion(alumno):
             fech_nacim=Utiles.checkcheck_fecha()
             if fech_nacim is not None:
                 if Utiles.confirmacion("Seguro que desea modificar la fecha de nacimiento " + alumno.fech_nacim + " por " + fech_nacim + "?"):
-                    if BaseDeDatosM.update("Alumnos", "fech_nacim", primary, fech_nacim):
+                    if GestorBaseDeDatos.update("Alumnos", "fech_nacim", primary, fech_nacim):
                         alumno=GestorBaseDeDatos.select1("Alumnos", primary)
                         print("Modificacion realizda con exito." + '\n')
                     else:
@@ -202,7 +206,22 @@ def modificacion(alumno):
             if(cont == 5):
                 print("Cometiste demasiados fallos")
                 elec="0"
+def mostrarTodos():
+    if len(GestorBaseDeDatos.selectAll("Alumnos")) > 0:
+        print("Mostrar todos los alumnos:")
+        alumnos = GestorBaseDeDatos.selectAll("Alumnos")
+        for alumno in alumnos:
+            print()
+            print("Nombre: " + alumno['nombre'])
+            print("Apellido " + alumno['apellido'])
+            print("Telefono: " + alumno['telefono'])
+            print("Direccion: " + alumno['direccion'])
+            print("Fecha de nacimiento: " + str(alumno['fech_nacim']))
 
+        print("-" * 20 + "\n")
+    else:
+        print("No hay alumnos creados")
+        print("-" * 20 + "\n")
 
 
 

@@ -39,7 +39,7 @@ def alta():
 
 
 def baja():
-    if len(GestorBaseDeDatos.selectAll2("Profesores")) > 0:
+    if len(GestorBaseDeDatos.selectAll("Profesores")) > 0:
         print("Baja profesor:")
         done = False
         while not done:
@@ -58,7 +58,7 @@ def baja():
 
                 else:
                     print("El dni no se corresponde con el de ningun profesor existente."+'\n')
-            if len(GestorBaseDeDatos.selectAll2("Profesores")) == 0:
+            if len(GestorBaseDeDatos.selectAll("Profesores")) == 0:
                 print("Ya no quedan profesores que borrar.")
                 done = True
                 print("-" * 20 + "\n")
@@ -83,7 +83,7 @@ def modificacion(profesor):
             if nueNomb is not None:
                 if Utiles.confirmacion(
                         "Seguro que desea modificar el nombre " + profesor.nombre + " por " + nueNomb + "?"):
-                    if BaseDeDatosM.update("Profesores", "nombre", profesor.dni, nueNomb):
+                    if GestorBaseDeDatos.update("Profesores", "nombre", profesor.dni, nueNomb):
                         print("Modificacion realizda con exito." + '\n')
                     else:
                         print("La modificacion no se pudo realizar." + '\n')
@@ -94,7 +94,7 @@ def modificacion(profesor):
             nueDni = Utiles.check_dni()
             if nueDni is not None and GestorBaseDeDatos.select1("Profesores", nueDni) is None:
                 if Utiles.confirmacion("Seguro que desea modificar el dni " + profesor.dni + " por " + nueDni + "?"):
-                    if BaseDeDatosM.update("Profesores", "dni", profesor.dni, nueDni):
+                    if GestorBaseDeDatos.update("Profesores", "dni", profesor.dni, nueDni):
                         print("Modificacion realizda con exito." + '\n')
                     else:
                         print("La modificacion no se pudo realizar." + '\n')
@@ -110,7 +110,7 @@ def modificacion(profesor):
             if nueTelf is not None:
                 if Utiles.confirmacion(
                         "Seguro que desea modificar el telefono " + profesor.telefono + " por " + nueTelf + "?"):
-                    if BaseDeDatosM.update("Profesores", "telefono", profesor.dni, nueTelf):
+                    if GestorBaseDeDatos.update("Profesores", "telefono", profesor.dni, nueTelf):
                         print("Modificacion realizda con exito." + '\n')
                     else:
                         print("La modificacion no se pudo realizar." + '\n')
@@ -122,7 +122,7 @@ def modificacion(profesor):
             if nueDire is not None:
                 if Utiles.confirmacion(
                         "Seguro que desea modificar la direccion " + profesor.direccion + " por " + nueDire + "?"):
-                    if BaseDeDatosM.update("Profesores", "direccion", profesor.dni, nueDire):
+                    if GestorBaseDeDatos.update("Profesores", "direccion", profesor.dni, nueDire):
                         print("Modificacion realizda con exito." + '\n')
                     else:
                         print("La modificacion no se pudo realizar." + '\n')
@@ -166,7 +166,7 @@ def modificar():
 
 
 def buscar():
-    if len(GestorBaseDeDatos.selectAll2("Profesores")) > 0:
+    if len(GestorBaseDeDatos.selectAll("Profesores")) > 0:
         print("Buscar profesor:")
         done = False
         while not done:
@@ -194,10 +194,10 @@ def buscar():
         print("-" * 20 + "\n")
 
 
-def mostarTodos():
-    if len(GestorBaseDeDatos.selectAll2("Profesores")) > 0:
+def mostrarTodos():
+    if len(GestorBaseDeDatos.selectAll("Profesores")) > 0:
         print("Mostrar todos los profesores:")
-        profesores = GestorBaseDeDatos.selectAll2("Profesores")
+        profesores = GestorBaseDeDatos.selectAll("Profesores")
         for profesor in profesores:
             print()
             print("Nombre: " + profesor['nombre'])
