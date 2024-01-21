@@ -115,6 +115,7 @@ def modificacion(alumno):
     elec = ""
     primary={'nombre':alumno.nombre,
             'apellido':alumno.apellido }
+    cont=0
     while elec != "0":
         elec = input("1. Nombre\n2. Apellido\n3. Telefono\n4. Direccion\n5. Fecha de nacimiento\n0. Volver\n")
         if elec == "1":
@@ -196,7 +197,11 @@ def modificacion(alumno):
             print("Saliendo de menu de modificacion." + "\n")
         else:
             print("Opticon no valida")
-
+            cont += 1
+            print("Fallos ", cont, "/5")
+            if(cont == 5):
+                print("Cometiste demasiados fallos")
+                elec="0"
 
 
 
