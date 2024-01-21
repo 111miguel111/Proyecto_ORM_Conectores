@@ -21,7 +21,8 @@ def alta():
             else:
                 print('Fallo al realizar el alta.' + '\n')
 
-        if not Utiles.confirmacion("Quieres tratar de dar de alta otro curso?"):  # Preguntamos si quiere dar otro curso de alta
+        if not Utiles.confirmacion(
+                "Quieres tratar de dar de alta otro curso?"):  # Preguntamos si quiere dar otro curso de alta
             done = True
             print("-" * 20 + "\n")
         else:
@@ -55,7 +56,7 @@ def baja():
                     done = True
                     print("-" * 20 + "\n")
                 else:
-                   print("\n")
+                    print("\n")
     else:
         print("No hay cursos creados.")
         print("-" * 20 + "\n")
@@ -64,12 +65,13 @@ def baja():
 def modificacion(curso):
     elec = ""
     cont = 0
-    while(elec != "0"):
+    while (elec != "0"):
         elec = input("1. Nombre\n2. Descripcion\n0. Volver\n")
         if elec == "1":
             nueNomb = Utiles.check_campo("nombre", 25)
             if nueNomb is not None and GestorBaseDeDatos.select1("Cursos", nueNomb) is None:
-                if Utiles.confirmacion("Seguro que desea modificar el nombre " + curso.nombre + " por " + nueNomb + "?"):
+                if Utiles.confirmacion(
+                        "Seguro que desea modificar el nombre " + curso.nombre + " por " + nueNomb + "?"):
                     if BaseDeDatosM.update("Cursos", "nombre", curso.nombre, nueNomb):
                         print("Modificacion realizda con exito." + '\n')
                     else:
@@ -83,7 +85,8 @@ def modificacion(curso):
         elif elec == "2":
             nueDesc = Utiles.check_campo("descripcion", 25)
             if nueDesc is not None:
-                if Utiles.confirmacion("Seguro que desea modificar la descripcion " + curso.descipcion + " por " + nueDesc + "?"):
+                if Utiles.confirmacion(
+                        "Seguro que desea modificar la descripcion " + curso.descipcion + " por " + nueDesc + "?"):
                     if BaseDeDatosM.update("Cunsos", "descripcion", curso.nombre, nueDesc):
                         print("Modificacion realizda con exito." + '\n')
                     else:
@@ -170,12 +173,53 @@ def relacionCursProf(curso):
     if dni is not None:
         profesor = GestorBaseDeDatos.select1("Profesores", dni)
         if profesor is not None:
-            aux = BaseDeDatosM.selectJoin("Cursos", curso.nombre)
-            print(aux, type(aux))
-            for row in aux:
-                print()
+            datos = {"cod_curs": curso.cod_curs,
+                     "id_prof": profesor.id_prof}
+            print(curso.nombre, curso.cod_curs)
+            aux = BaseDeDatosM.selectJoin("CursosEnProfesores", curso.cod_curs)
+
+            if len(aux) > 0:    #Hay profesor
+                aux = BaseDeDatosM.selectJoin("Cursos_Profesores", datos)
+                if len(aux) > 0:    #El profesor es el profesor actual del curso
+                    print(profesor.nombre + " ya es el profesor de " + curso.nombre)
+                else:   #Hay que sustiruir al profesor
+                    if Utiles.confirmacion("Seguro que quieres que " + profesor.nombre + " imparta " + curso.nombre + "?\n Esto sobre escribira el profesor actual de " +curso.nombre):
+                        if GestorBaseDeDatos.insert("Cursos_Profesores", datos):
+                            print("Relacion realizda con exito." + '\n')
+                        else:
+                            print("La modificacion no se pudo realizar." + '\n')
+
+                    else:
+                        print("Relacion cancelada." + "\n")
+            else:   #No hay profesor
+                if Utiles.confirmacion("Seguro que quieres que " + profesor.nombre + " imparta " + curso.nombre + "?"):
+
+                    if GestorBaseDeDatos.insert("Cursos_Profesores", datos):
+                        print("Relacion realizda con exito." + '\n')
+                    else:
+                        print("La modificacion no se pudo realizar." + '\n')
+                else:
+                    print("Relacion cancelada." + "\n")
         else:
             print("El dni no se corresponde con el de ningun profesor existente." + '\n')
+
+
+def desrelacionarCursProf(curso):
+    if len(BaseDeDatosM.selectJoin("CursosEnProfesores", curso.cod_curs)) > 0:
+        profesor = (BaseDeDatosM.Profesores.select(BaseDeDatosM.Profesores).join(BaseDeDatosM.Cursos_Profesores).join(BaseDeDatosM.Cursos)
+                         .where(BaseDeDatosM.Cursos.cod_curs == curso.cod_curs & BaseDeDatosM.Cursos_Profesores.cod_curs == BaseDeDatosM.Cursos.cod_curs & BaseDeDatosM.Profesores.id_prof == BaseDeDatosM.Cursos_Profesores.id_prof)).get()
+
+        print(profesor, type(profesor))
+        if Utiles.confirmacion("Seguro que quiere que " + str(profesor.nombre) + " deje de ser el profesor de " + curso.nombre):
+            datos = {"cod_curs": curso.cod_curs,"id_prof": profesor.id_prof}
+            if GestorBaseDeDatos.delete("Cursos_Profesores", datos):
+                print("Desrelacion realizda con exito." + '\n')
+            else:
+                print("Hubo un error en la desrelacion")
+        else:
+            print("Relacion cancelada." + "\n")
+    else:
+        print(curso.nombre + " no tiene un profesor que desrelacionar."+ "\n")
 
 
 def relacionarCursAlum(curso):
@@ -200,7 +244,23 @@ def relacionar():
                             elec = input("1. Relacion cursos con profesores\n2. Relacionar cursos con alumnos\n0. Salir\n")
                             if elec == "1":
                                 if len(GestorBaseDeDatos.selectAll2("Profesores")) > 0:
-                                    relacionCursProf(curso)
+                                    elec2 = ""
+                                    cont2 = 0
+                                    while elec2 != "0":
+                                        elec2 = input("1. Relacionar\n2. Desrelacionar\n0. Salir\n")
+                                        if elec2 == "1":
+                                            relacionCursProf(curso)
+                                        elif elec2 == "2":
+                                            desrelacionarCursProf(curso)
+                                        elif elec2 == "0":
+                                            print("Saliendo del menu relacionar.")
+                                        else:
+                                            print("Opticon no valida")
+                                            cont2 += 1
+                                            print("Fallos ", cont2, "/5")
+                                            if cont2 == 5:
+                                                print("Cometiste demasiados fallos.")
+                                                elec2 = "0"
 
                                 else:
                                     print("No hay profesores creados.")

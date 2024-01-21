@@ -293,15 +293,11 @@ def insert(tabla, datos):
 
         elif tabla == "Cursos_Profesores":
             Cursos_Profesores.create(cod_curs=datos['cod_curs'],
-                                          nombre_curs=datos['nombre_curs'],
-                                          id_prof=datos['id_prof'],
-                                          nombre_prof=datos['nombre_prof'])
+                                          id_prof=datos['id_prof'])
 
         elif tabla == "Cursos_Alumnos":
             Cursos_Alumnos.create(cod_curs=datos['cod_curs'],
-                                       nombre_curs=datos['nombre_curs'],
-                                       num_exp=datos['num_exp'],
-                                       nombre_alum=datos['nombre_alum'])
+                                       num_exp=datos['num_exp'])
 
         return True
     except:
@@ -330,13 +326,13 @@ def delete(tabla, primary):
             borrar.execute()
 
         elif tabla == "Cursos_Profesores":
-            borrar = Cursos_Profesores.delete().where(Cursos.cod_curs == primary['cod_curs'] &
-                                                           Profesores.id_prof == primary['id_prof'])
+            borrar = Cursos_Profesores.delete().where(Cursos_Profesores.cod_curs == primary['cod_curs'] &
+                                                           Cursos_Profesores.id_prof == primary['id_prof'])
             borrar.execute()
 
         elif tabla == "Cursos_Alumnos":
-            borrar = Cursos_Alumnos.delete().where(Cursos.cod_curs == primary['cod_curs'] &
-                                                           Alumnos.num_exp == primary['num_exp'])
+            borrar = Cursos_Alumnos.delete().where(Cursos_Alumnos.cod_curs == primary['cod_curs'] &
+                                                           Cursos_Alumnos.num_exp == primary['num_exp'])
             borrar.execute()
 
         return True

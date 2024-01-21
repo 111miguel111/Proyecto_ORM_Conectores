@@ -451,10 +451,14 @@ def selectJoin(tabla, primary):
             entidad= list((Alumnos.select().join(Cursos_Alumnos).where(Alumnos.nombre == primary['nombre'] & Alumnos.apellido == primary['apellido'] & Alumnos.num_exp==Cursos_Alumnos.num_exp)))
         elif tabla=="CursosEnAlumnos":
             #Si el curso esta en Cursos_alumnos
-            entidad=list((Cursos.select().join(Cursos_Alumnos).where(Cursos.cod_curs == primary & Cursos.cod_curs==Cursos_Alumnos.cod_curs)))
-        elif tabla=="CursosEnAlumnos":
+            entidad=list((Cursos.select().join(Cursos_Alumnos).where(Cursos.nombre == primary & Cursos.cod_curs == Cursos_Alumnos.cod_curs)))
+        elif tabla=="CursosEnProfesores":
              #Si el curso esta en Cursos_profesores
-             entidad=list((Cursos.select().join(Cursos_Profesores).where(Cursos.cod_curs == primary & Cursos.cod_curs==Cursos_Profesores.cod_curs)))
+             entidad = list((Cursos
+                           .select(Cursos)
+                           .join(Cursos_Profesores)
+                           .where(Cursos.cod_curs == primary & Cursos.cod_curs == Cursos_Profesores.cod_curs)))
+             """entidad=list((Cursos.select(Cursos).join(Cursos_Profesores).where(Cursos.nombre == primary & Cursos.cod_curs == Cursos_Profesores.cod_curs)))"""
         elif tabla == "Cursos_Profesores":
             entidad = list((Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary['cod_curs'] & 
                                                        Cursos_Profesores.id_prof == primary['id_prof'])))
