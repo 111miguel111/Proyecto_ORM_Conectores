@@ -16,7 +16,7 @@ conn = GestorBaseDeDatos.iniciar()
 
 #GestionProfesores.buscar()
 
-#GestionProfesores.mostarTodos()
+GestionProfesores.mostarTodos()
 
 #Alumnos
 #-----------------------------------------------------------------
@@ -42,7 +42,9 @@ conn = GestorBaseDeDatos.iniciar()
 
 #GestionCursos.buscar()
 
-#GestionCursos.mostrarTodos()
+GestionCursos.mostrarTodos()
+
+GestionCursos.relacionar()
 
 #-----------------------------------------------------------------
 

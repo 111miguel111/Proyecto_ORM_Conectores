@@ -63,6 +63,7 @@ def baja():
 
 def modificacion(curso):
     elec = ""
+    cont = 0
     while(elec != "0"):
         elec = input("1. Nombre\n2. Descripcion\n0. Volver\n")
         if elec == "1":
@@ -94,6 +95,11 @@ def modificacion(curso):
             print("Saliendo de menu de modificacion." + "\n")
         else:
             print("Opticon no valida")
+            cont += 1
+            print("Fallos ", cont, "/5")
+            if cont == 5:
+                print("Cometiste demasiados fallos")
+                elec = "0"
 
 
 def modificar():
@@ -158,9 +164,29 @@ def mostrarTodos():
         print("-" * 20 + "\n")
 
 
+def relacionCursProf(curso):
+    print("Introduzca el dni del profesor que desea modificar.")
+    dni = Utiles.check_dni()
+    if dni is not None:
+        profesor = GestorBaseDeDatos.select1("Profesores", dni)
+        if profesor is not None:
+            aux = BaseDeDatosM.selectJoin("Cursos", curso.nombre)
+            print(aux, type(aux))
+            for row in aux:
+                print()
+        else:
+            print("El dni no se corresponde con el de ningun profesor existente." + '\n')
+
+
+def relacionarCursAlum(curso):
+    return None
+
+
 def relacionar():
-    if len(GestorBaseDeDatos.selectAll2("Alumnos")) > 0 and len(GestorBaseDeDatos.selectAll2("Profesores")) > 0:
+    if len(GestorBaseDeDatos.selectAll2("Alumnos")) > 0 or len(GestorBaseDeDatos.selectAll2("Profesores")) > 0:
         if len(GestorBaseDeDatos.selectAll2("Cursos")) > 0:
+            lista = BaseDeDatosM.selectAll("Cursos")
+            print(lista, type(lista))
             print("Relacionar curso:")
             done = False
             while not done:
@@ -168,11 +194,47 @@ def relacionar():
                 if nombre is not None:
                     curso = GestorBaseDeDatos.select1("Cursos", nombre)
                     if curso is not None:
-                        print()
+                        elec = ""
+                        cont = 0
+                        while elec != "0":
+                            elec = input("1. Relacion cursos con profesores\n2. Relacionar cursos con alumnos\n0. Salir\n")
+                            if elec == "1":
+                                if len(GestorBaseDeDatos.selectAll2("Profesores")) > 0:
+                                    relacionCursProf(curso)
+
+                                else:
+                                    print("No hay profesores creados.")
+                                    cont += 1
+                                    print("Fallos ", cont, "/5")
+                                    if cont == 5:
+                                        print("Cometiste demasiados fallos.")
+                                        elec = "0"
+
+                            elif elec == "2":
+                                if len(GestorBaseDeDatos.selectAll2("Alumnos")) > 0:
+                                    relacionarCursAlum(curso)
+
+                                else:
+                                    print("No hay alumnos creados.")
+                                    cont += 1
+                                    print("Fallos ", cont, "/5")
+                                    if cont == 5:
+                                        print("Cometiste demasiados fallos.")
+                                        elec = "0"
+
+                            elif elec == "0":
+                                print("Saliendo del menu relacionar.")
+                            else:
+                                print("Opticon no valida")
+                                cont += 1
+                                print("Fallos ", cont, "/5")
+                                if cont == 5:
+                                    print("Cometiste demasiados fallos.")
+                                    elec = "0"
                     else:
                         print("El nombre no pertenece al de ningun curso.")
 
-                if not Utiles.confirmacion("Quieres tratar de dar de relacionar otro curso?"):
+                if not Utiles.confirmacion("Quieres tratar de relacionar otro curso?"):
                     done = True
                     print("-" * 20 + "\n")
                 else:

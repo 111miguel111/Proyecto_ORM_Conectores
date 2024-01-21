@@ -75,6 +75,7 @@ def baja():
 
 def modificacion(profesor):
     elec = ""
+    cont = 0
     while elec != "0":
         elec = input("1. Nombre\n2. DNI\n3. Telefono\n4. Direccion\n0. Volver\n")
         if elec == "1":
@@ -132,6 +133,11 @@ def modificacion(profesor):
             print("Saliendo de menu de modificacion." + "\n")
         else:
             print("Opticon no valida")
+            cont += 1
+            print("Fallos ", cont, "/5")
+            if cont == 5:
+                print("Cometiste demasiados fallos")
+                elec = "0"
 
 
 def modificar():
