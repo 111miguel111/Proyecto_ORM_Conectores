@@ -11,16 +11,16 @@ def confirmacion(contexto):
     :return Devuelve un un boolean. El valor sera True si escribe 'si' y False si escribe 'no'
     '''
     cont = 0
-    while (cont < 5):
+    while cont < 5:
         print(contexto)
         inputConfirmacion = input()
-        if (inputConfirmacion.lower() == 'si'):
+        if inputConfirmacion.lower() == 'si':
             return True
-        elif (inputConfirmacion.lower() == 'no'):
+        elif inputConfirmacion.lower() == 'no':
             return False
         else:
-            if (cont < 4):
-                print("\nValor incorrecto, pruebe otra vez(Si o no)."+"\n")
+            if cont < 4:
+                print("\nValor incorrecto, pruebe otra vez (Si o no)."+"\n")
             cont += 1
     print("Has superado el numero de intentos."+"\n")
     return False
@@ -40,30 +40,6 @@ def entrada_teclado(contexto=""):
     else:
         print("El campo, " + contexto + " no puede estar vacio."+"\n")
         return None
-
-
-def check_index(indice):
-    """
-    Funcion de apoyo que permite gestionar los fallos en una opcion cerrada de 0 a n
-    :param indice: Delimita el rango de opciones elegibles
-    :return: index: respuesta del usuario
-    :return: None: El usuario ha superado el numero maximo de intentos y sale del proceso
-    """
-    ind_arreglado = int(indice)
-    ind_arreglado += 1
-    fallos = 0
-    while fallos < 5:
-        respuesta = entrada_teclado()
-        if respuesta.isnumeric():
-            if 1 <= int(respuesta) < ind_arreglado:
-                return int(respuesta) - 1
-            else:
-                print('Recuerde introducir un valor entre 1 y ' + str(ind_arreglado)+".\n")
-                fallos += 1
-        else:
-            print("Opcion no valida." + "\n")
-            fallos += 1
-    return None
 
 
 # CHECKERS
@@ -102,6 +78,8 @@ def check_campo(contexto, long):
                     fallos += 1
         else:
             fallos += 1
+        if fallos < 5:
+            print("Fallos hasta salir", fallos, "/5")
     print("Se han producido 5 fallos.\nAbotortando proceso.\n")
     return None
 
@@ -133,7 +111,8 @@ def check_dni():
                 fallos += 1
         else:
             fallos += 1
-
+        if fallos < 5:
+            print("Fallos hasta salir", fallos, "/5")
     print("Se han producido 5 fallos.\nAbotortando proceso"+"\n")
     return None
 
@@ -160,6 +139,8 @@ def check_telefono():
                 fallos += 1
         else:
             fallos += 1
+        if fallos < 5:
+            print("Fallos hasta salir", fallos, "/5")
     print("Se han producido 5 fallos.\nAbotortando proceso."+"\n")
     return None
 
@@ -200,6 +181,7 @@ def check_fecha():
                 fallos += 1
         else:
             fallos += 1
-
+        if fallos < 5:
+            print("Fallos hasta salir", fallos, "/5")
     print("Se han producido 5 fallos.\nAbotortando proceso."+"\n")
     return None

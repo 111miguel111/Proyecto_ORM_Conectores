@@ -29,12 +29,16 @@ def alta():
                 print('Alta realizada con exito'+'\n')
             else:
                 print('Fallo al realizar el alta.'+'\n')
-
-        if not Utiles.confirmacion("Quieres tratar de dar de alta otro profesor?"):  # Preguntamos si quiere dar otro profesor de alta
+        else:
+            done = True
+        if not done and not Utiles.confirmacion("Quieres tratar de dar de alta otro profesor?"):  # Preguntamos si quiere dar otro profesor de alta
             done = True
             print("-" * 20 + "\n")
         else:
-            print()
+            if done:
+                print("-" * 20 + "\n")
+            else:
+                print()
 
 
 def baja():

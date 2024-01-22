@@ -85,8 +85,8 @@ def modificacion(curso):
             nueDesc = Utiles.check_campo("descripcion", 25)
             if nueDesc is not None:
                 if Utiles.confirmacion(
-                        "Seguro que desea modificar la descripcion " + curso.descipcion + " por " + nueDesc + "?"):
-                    if GestorBaseDeDatos.update("Cunsos", "descripcion", curso.nombre, nueDesc):
+                        "Seguro que desea modificar la descripcion " + curso.descripcion + " por " + nueDesc + "?"):
+                    if GestorBaseDeDatos.update("Cursos", "descripcion", curso.nombre, nueDesc):
                         print("Modificacion realizda con exito." + '\n')
                     else:
                         print("La modificacion no se pudo realizar." + '\n')
@@ -233,13 +233,14 @@ def desrelacionarCursProf(curso):
 
 def relacionarCursAlum(curso):
     print("Introduzca el nombre del alumno que desea modificar.")
-    nombre = Utiles.check_campo("nombre",25)
+    apellido = None
+    nombre = Utiles.check_campo("nombre", 25)
     if nombre is not None:
         print("Introduzca el apellido del alumno que desea modificar.")
         apellido = Utiles.check_campo("apellido", 25)
     if apellido is not None:
-        primary={'nombre':nombre,
-                 'apellido':apellido}
+        primary = {'nombre': nombre,
+                 'apellido': apellido}
         alumno = GestorBaseDeDatos.select1("Alumnos", primary)
         if alumno is not None:
             datos = {"cod_curs": curso.cod_curs,
@@ -249,19 +250,20 @@ def relacionarCursAlum(curso):
 
             if len(aux) > 0:    #Hay alumno
                 aux = GestorBaseDeDatos.selectJoin("Cursos_Alumnos", datos)
-                if len(aux) > 0:    #El alumno ya esta en el curso
-                    print(alumno.nombre +" "+ alumno.apellido+ " ya esta matriculado en " + curso.nombre)
+                print(aux)
+                if aux is not None:    #El alumno ya esta en el curso
+                    print(alumno.nombre + " " + alumno.apellido + " ya esta matriculado en " + curso.nombre)
                 else:   #El alumno no esta en el curso
-                    if Utiles.confirmacion("Seguro que quieres que " + alumno.nombre +" "+alumno.apellido+ " sea matriculado en " + curso.nombre + "?\n "):
+                    if Utiles.confirmacion("Seguro que quieres que " + alumno.nombre + " " + alumno.apellido + " sea matriculado en " + curso.nombre + "?\n "):
                         if GestorBaseDeDatos.insert("Cursos_Alumnos", datos):
                             print("Relacion realizda con exito." + '\n')
                         else:
-                            print("La modificacion no se pudo realizar." + '\n')
+                            print("La relacion no se pudo realizar." + '\n')
 
                     else:
                         print("Relacion cancelada." + "\n")
             else:   #No hay alumnos
-                if Utiles.confirmacion("Seguro que quieres que " + alumno.nombre +" "+alumno.apellido+ " sea matriculado en " + curso.nombre + "?\n "):
+                if Utiles.confirmacion("Seguro que quieres que " + alumno.nombre + " " + alumno.apellido + " sea matriculado en " + curso.nombre + "?\n "):
                     if GestorBaseDeDatos.insert("Cursos_Alumnos", datos):
                         print("Relacion realizda con exito." + '\n')
                     else:
@@ -273,15 +275,15 @@ def relacionarCursAlum(curso):
     return None
 def desrelacionarCursAlum(curso):
     if len(GestorBaseDeDatos.selectJoin("CursosEnAlumnos", curso.cod_curs)) > 0:
-        
         print("Introduzca el nombre del alumno que desea desmatricular.")
         nombre = Utiles.check_campo("nombre",25)
+        apellido = None
         if nombre is not None:
             print("Introduzca el apellido del alumno que desea desmatricular.")
             apellido = Utiles.check_campo("apellido", 25)
         if apellido is not None:
             primary={'nombre':nombre,
-                     'apellido':apellido}
+                     'apellido': apellido}
             alumno = GestorBaseDeDatos.select1("Alumnos", primary)
             if alumno is not None:
                 print(alumno, type(alumno))
