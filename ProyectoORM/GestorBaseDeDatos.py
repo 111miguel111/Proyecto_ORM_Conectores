@@ -497,7 +497,7 @@ class Alumnos(Model):
     apellido = CharField(null=False)
     telefono = CharField(null=False)
     direccion = CharField(null=False)
-    fech_nacim = DateField(formats=['%d-%b-%Y'], null=False)
+    fech_nacim = DateField(formats=['%d-%m-%Y'], null=False)
 
     class Meta:
         database = conn

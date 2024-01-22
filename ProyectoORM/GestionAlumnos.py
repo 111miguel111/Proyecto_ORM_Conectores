@@ -25,7 +25,7 @@ def alta():
         else:
             print(alumno, type(alumno))
             print(alumno.nombre)
-            print('El nombre y el apellido ya pertenece a otro alumno')
+            print('El nombre y el apellido ya pertenece a otro alumno.')
         if telefono is not None:
             direccion = Utiles.check_campo("direccion", 50)
         if direccion is not None:
@@ -38,7 +38,7 @@ def alta():
                      'fech_nacim': fech_nacim}
 
             if GestorBaseDeDatos.insert('Alumnos', datos):
-                print('Alta realizada con exito'+'\n')
+                print('Alta realizada con exito.'+'\n')
             else:
                 print('Fallo al realizar el alta.'+'\n')
 
@@ -46,10 +46,10 @@ def alta():
             done = True
             print("-" * 20 + "\n")
         else:
-            print("\n")
+            print()
             
 def baja():
-    print(len(GestorBaseDeDatos.selectAll("Alumnos")))
+    print("Hay :",len(GestorBaseDeDatos.selectAll("Alumnos")), " Alumnos creados")
     if len(GestorBaseDeDatos.selectAll("Alumnos")) > 0:
         print("Baja alumno:")
         done = False
@@ -57,7 +57,7 @@ def baja():
             print("Introduzca el nombre del alumno que desea eliminar.")
             alumno=buscar()
             if alumno is not None:
-                prymary={'nombre':alumno.nombre,
+                primary={'nombre':alumno.nombre,
                          'apellido':alumno.apellido}
                 if Utiles.confirmacion("Seguro que desea eliminar a " + alumno.nombre + " del centro?"):
                     GestorBaseDeDatos.delete('Alumnos',primary)
@@ -77,7 +77,7 @@ def baja():
                 else:
                     print("\n")
     else:
-        print("No hay alumnos creados")
+        print("No hay alumnos creados.")
         print("-" * 20 + "\n")
 def buscar():
     primary={}
@@ -90,11 +90,13 @@ def buscar():
                  'apellido':apellido}
         alumno = GestorBaseDeDatos.select1("Alumnos", primary)
         print(alumno, type(alumno))
+        print()
         if alumno is not None:
             return alumno
     return None
+
 def modificar():
-    print(len(GestorBaseDeDatos.selectAll("Alumnos")))
+    print("Hay :",len(GestorBaseDeDatos.selectAll("Alumnos")), " Alumnos creados")
     if len(GestorBaseDeDatos.selectAll("Alumnos")) > 0:
         print("Modificar alumno:")
         done = False
@@ -112,15 +114,17 @@ def modificar():
             else:
                 print("\n")
     else:
-        print("No hay alumnos creados")
+        print("No hay alumnos creados.")
         print("-" * 20 + "\n")
+        
+        
 def modificacion(alumno):
     elec = ""
     primary={'nombre':alumno.nombre,
             'apellido':alumno.apellido }
     cont=0
     while elec != "0":
-        elec = input("1. Nombre\n2. Apellido\n3. Telefono\n4. Direccion\n5. Fecha de nacimiento\n0. Volver\n")
+        elec = input("Que desea modificar?\n1. Nombre\n2. Apellido\n3. Telefono\n4. Direccion\n5. Fecha de nacimiento\n0. Volver\n")
         if elec == "1":
             nombre = Utiles.check_campo('nombre', 25)
             if nombre is not None :
@@ -140,7 +144,7 @@ def modificacion(alumno):
                         print("Modificacion cancelada." + '\n')
 
                 else:
-                    print("El nombre pertenece a otro alumno ya existente con el mismo apellido")
+                    print("El nombre pertenece a otro alumno ya existente con el mismo apellido."+ '\n')
         elif elec == "2":
             apellido = Utiles.check_campo('apellido', 25)
             if apellido is not None :
@@ -160,7 +164,7 @@ def modificacion(alumno):
                         print("Modificacion cancelada." + '\n')
 
                 else:
-                    print("El aellido pertenece a otro alumno ya existente con el mismo nombre")
+                    print("El aellido pertenece a otro alumno ya existente con el mismo nombre."+ '\n')
         elif elec == "3":
             telefono = Utiles.check_telefono()
             if telefono is not None:
@@ -184,7 +188,7 @@ def modificacion(alumno):
                 else:
                     print("Modificacion cancelada." + '\n')
         elif elec == "5":
-            fech_nacim=Utiles.checkcheck_fecha()
+            fech_nacim=Utiles.check_fecha()
             if fech_nacim is not None:
                 if Utiles.confirmacion("Seguro que desea modificar la fecha de nacimiento " + alumno.fech_nacim + " por " + fech_nacim + "?"):
                     if GestorBaseDeDatos.update("Alumnos", "fech_nacim", primary, fech_nacim):
@@ -199,11 +203,11 @@ def modificacion(alumno):
         elif elec == "0":
             print("Saliendo de menu de modificacion." + "\n")
         else:
-            print("Opticon no valida")
+            print("Opcion no valida.")
             cont += 1
-            print("Fallos ", cont, "/5")
+            print("Fallos ", cont, "/5"+ "\n")
             if(cont == 5):
-                print("Cometiste demasiados fallos")
+                print("Cometiste demasiados fallos."+ "\n")
                 elec="0"
 def mostrarTodos():
     if len(GestorBaseDeDatos.selectAll("Alumnos")) > 0:
@@ -215,12 +219,36 @@ def mostrarTodos():
             print("Apellido " + alumno['apellido'])
             print("Telefono: " + alumno['telefono'])
             print("Direccion: " + alumno['direccion'])
-            print("Fecha de nacimiento: " + str(alumno['fech_nacim']))
+            fecha = str(alumno["fech_nacim"]).split('-')
+            print("Fecha de nacimiento: " + fecha[2]+"-"+ fecha[1]+"-"+ fecha[0])
 
         print("-" * 20 + "\n")
     else:
-        print("No hay alumnos creados")
+        print("No hay alumnos creados.")
         print("-" * 20 + "\n")
-
+        
+        
+def mostrarUno():
+    primary={}
+    nombre = Utiles.check_campo("nombre",25)
+    if nombre is not None:
+        print("Introduzca el apellido del alumno.")
+        apellido = Utiles.check_campo("apellido", 25)
+    if apellido is not None:
+        primary={'nombre':nombre,
+                 'apellido':apellido}
+        alumno = GestorBaseDeDatos.select1("Alumnos", primary)
+        print(alumno, type(alumno))
+        if alumno is not None:
+            for alumno in alumnos:
+                print()
+                print("Nombre: " + alumno['nombre'])
+                print("Apellido " + alumno['apellido'])
+                print("Telefono: " + alumno['telefono'])
+                print("Direccion: " + alumno['direccion'])
+                fecha = str(alumno["fech_nacim"]).split('-')
+                print("Fecha de nacimiento: " + fecha[2]+"-"+ fecha[1]+"-"+ fecha[0])
+            return alumno
+    return None
 
 

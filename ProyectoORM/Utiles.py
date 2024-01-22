@@ -20,9 +20,9 @@ def confirmacion(contexto):
             return False
         else:
             if (cont < 4):
-                print("\nValor incorrecto, pruebe otra vez(Si o no)")
+                print("\nValor incorrecto, pruebe otra vez(Si o no)."+"\n")
             cont += 1
-    print("\nHas superado el numero de intentos")
+    print("Has superado el numero de intentos."+"\n")
     return False
 
 
@@ -38,7 +38,7 @@ def entrada_teclado(contexto=""):
     if respuesta is not None and not respuesta.isspace():
         return respuesta.strip()
     else:
-        print("El campo, " + contexto + " no puede estar vacio.")
+        print("El campo, " + contexto + " no puede estar vacio."+"\n")
         return None
 
 
@@ -58,10 +58,10 @@ def check_index(indice):
             if 1 <= int(respuesta) < ind_arreglado:
                 return int(respuesta) - 1
             else:
-                print('Recuerde introducir un valor entre 1 y ' + str(ind_arreglado))
+                print('Recuerde introducir un valor entre 1 y ' + str(ind_arreglado)+".\n")
                 fallos += 1
         else:
-            print("opcion no valida" + "\n")
+            print("Opcion no valida." + "\n")
             fallos += 1
     return None
 
@@ -88,21 +88,21 @@ def check_campo(contexto, long):
             if not carac_no_valido:
                 long = int(long)
                 if 0 < len(campo) <= long:  # Verificamos la longitud del campo
-                    print(contexto + " introducido con exito.")
+                    print(contexto.capitalize() + " introducido con exito.")
                     return campo.capitalize()
                 else:
-                    print(contexto + " tiene una longitud no valida, longitud maxima: " + str(long))
+                    print(contexto + " tiene una longitud no valida, longitud maxima: " + str(long)+".\n")
                     fallos += 1
             else:
                 if len(campo) == 0:
-                    print("El campo, " + contexto + " no puede estar vacio.")
+                    print("El campo, " + contexto + " no puede estar vacio."+"\n")
                     fallos += 1
                 else:
-                    print(contexto + " contiene caracteres no validos")
+                    print(contexto + " contiene caracteres no validos."+"\n")
                     fallos += 1
         else:
             fallos += 1
-    print("Se han producido 5 fallos.\nAbotortando proceso")
+    print("Se han producido 5 fallos.\nAbotortando proceso.\n")
     return None
 
 
@@ -114,7 +114,7 @@ def check_dni():
     """
     fallos = 0
     while fallos < 5:
-        print("Recuerde el formato de un DNI valido es 00000000A")
+        print("Recuerde el formato de un DNI valido es 00000000A.")
         dni = entrada_teclado("DNI")
         if dni is not None:
             if len(dni) == 9:
@@ -123,18 +123,18 @@ def check_dni():
                         print("DNI introducido con exito.")
                         return dni.upper()
                     else:
-                        print("El ultimo caracter debe tratarse de una letra.")
+                        print("El ultimo caracter debe tratarse de una letra."+"\n")
                         fallos += 1
                 else:
-                    print("Los primeros 8 caracteres deben tratarse de numeros.")
+                    print("Los primeros 8 caracteres deben tratarse de numeros."+"\n")
                     fallos += 1
             else:
-                print("El DNI debe de tener 9 caracteres.")
+                print("El DNI debe de tener 9 caracteres."+"\n")
                 fallos += 1
         else:
             fallos += 1
 
-    print("Se han producido 5 fallos.\nAbotortando proceso")
+    print("Se han producido 5 fallos.\nAbotortando proceso"+"\n")
     return None
 
 
@@ -153,14 +153,14 @@ def check_telefono():
                     print("Telefono introducido con exito.")
                     return campo
                 else:
-                    print("Telefono tiene una longituz no valida, longitud debe ser: 9")
+                    print("Telefono tiene una longituz no valida, longitud debe ser: 9."+"\n")
                     fallos += 1
             else:
-                print("Telefono contiene caracteres no validos")
+                print("Telefono contiene caracteres no validos."+"\n")
                 fallos += 1
         else:
             fallos += 1
-    print("Se han producido 5 fallos.\nAbotortando proceso")
+    print("Se han producido 5 fallos.\nAbotortando proceso."+"\n")
     return None
 
 
@@ -172,7 +172,7 @@ def check_fecha():
     """
     fallos = 0
     while fallos < 5:
-        print("Recuerde el formato de la fecha es DD-MM-YYYY")
+        print("Recuerde el formato de la fecha es DD-MM-YYYY.")
         fecha = entrada_teclado("fecha")
         if fecha is not None:
             if fecha.count("-") == 2:
@@ -185,20 +185,21 @@ def check_fecha():
                             (mes in [4, 6, 9, 11] and 1 <= dia <= 30 and 1990 <= year <= 2023) or
                             (mes == 2 and 1 <= dia <= 28 and 1990 <= year <= 2023)):
 
-                        print("Fecha introducida con exito")
+                        print("Fecha introducida con exito.")
                         return datetime.strptime(str(dia) + "/" + str(mes) + "/" + str(year), "%d/%m/%Y").strftime(
                             "%d-%m-%Y")
                     else:
                         print(
-                            "No se corresponde con una fecha valida: para mas info--> https://es.wikipedia.org/wiki/Mes")
+                            "No se corresponde con una fecha valida: para mas info--> https://es.wikipedia.org/wiki/Mes"+"\n")
+                        fallos += 1
                 else:
-                    print("Formato de fecha no valido")
+                    print("Formato de fecha no valido."+"\n")
                     fallos += 1
             else:
-                print("Formato de fecha no valido, recuerde respetar los guiones.")
+                print("Formato de fecha no valido, recuerde respetar los guiones."+"\n")
                 fallos += 1
         else:
             fallos += 1
 
-    print("Se han producido 5 fallos.\nAbotortando proceso")
+    print("Se han producido 5 fallos.\nAbotortando proceso."+"\n")
     return None
