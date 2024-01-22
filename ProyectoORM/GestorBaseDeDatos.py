@@ -5,6 +5,7 @@ import Utiles
 import sys
 import traceback
 
+
 def escanerNumerico():
     '''
     Metodo para escanear una cadena con solo numeros
@@ -151,7 +152,7 @@ def mysqlconnect():
         user_variable = str(config['SERVER']['user'])
         password_variable = str(config['SERVER']['password'])
         port_variable = int(config['SERVER']['port'])
-        
+
         conn = pymysql.connect(
             host=host_variable,
             user=user_variable,
@@ -161,7 +162,8 @@ def mysqlconnect():
         return conn
     # Si la conexion no se puede realizar ya sea por que  el gestor de base de datos esta apagado nos informara
     except pymysql.err.OperationalError as e:
-        print("Se ha producido un error, compruebe que el sistema gestor de base de datos al que se quiere conectar \nesta operativa y que los datos son correctos.\nEl programa se cerrara")
+        print(
+            "Se ha producido un error, compruebe que el sistema gestor de base de datos al que se quiere conectar \nesta operativa y que los datos son correctos.\nEl programa se cerrara")
         sys.exit()  # Cerramos el programa ya que no deberia continuar tras este error
     # Si la conexion no se puede realizar por que el fichero de configuracion esta mal  nos informara
     except:
@@ -233,7 +235,8 @@ def iniciar():
     '''
     # Metodo que inicia lo relacionado con la base de datos, comprueba el fichero de datos, comprueba la conexion y si esta bien procede a crear una base de datos con las tablas necesarias
     try:
-        if (checkFileExistance("config.ini") == True):  # Comprobamos que el fichero de configuracion existe, si no es el caso lo creamos con los datos por defecto
+        if (checkFileExistance(
+                "config.ini") == True):  # Comprobamos que el fichero de configuracion existe, si no es el caso lo creamos con los datos por defecto
             if (checkConfigBien("config.ini") == False):  # Comprobamos que el fichero de configuracion esta bien
                 # Si hay algun error informamos al usuario
                 print(
@@ -276,28 +279,28 @@ def insert(tabla, datos):
     try:
         if tabla == "Profesores":
             Profesores.create(dni=datos['dni'],
-                                   nombre=datos['nombre'],
-                                   telefono=datos['telefono'],
-                                   direccion=datos['direccion'])
+                              nombre=datos['nombre'],
+                              telefono=datos['telefono'],
+                              direccion=datos['direccion'])
 
         elif tabla == "Alumnos":
             Alumnos.create(nombre=datos['nombre'],
-                                apellido=datos['apellido'],
-                                telefono=datos['telefono'],
-                                direccion=datos['direccion'],
-                                fech_nacim=datos['fech_nacim'])
+                           apellido=datos['apellido'],
+                           telefono=datos['telefono'],
+                           direccion=datos['direccion'],
+                           fech_nacim=datos['fech_nacim'])
 
         elif tabla == "Cursos":
             Cursos.create(nombre=datos['nombre'],
-                               descripcion=datos['descripcion'])
+                          descripcion=datos['descripcion'])
 
         elif tabla == "Cursos_Profesores":
             Cursos_Profesores.create(cod_curs=datos['cod_curs'],
-                                          id_prof=datos['id_prof'])
+                                     id_prof=datos['id_prof'])
 
         elif tabla == "Cursos_Alumnos":
             Cursos_Alumnos.create(cod_curs=datos['cod_curs'],
-                                       num_exp=datos['num_exp'])
+                                  num_exp=datos['num_exp'])
 
         return True
     except:
@@ -317,8 +320,8 @@ def delete(tabla, primary):
             borrar.execute()
 
         elif tabla == "Alumnos":
-            borrar = Alumnos.delete().where(Alumnos.nombre == primary['nombre'] ,
-                                                 Alumnos.apellido == primary['apellido'])
+            borrar = Alumnos.delete().where(Alumnos.nombre == primary['nombre'],
+                                            Alumnos.apellido == primary['apellido'])
             borrar.execute()
 
         elif tabla == "Cursos":
@@ -326,13 +329,13 @@ def delete(tabla, primary):
             borrar.execute()
 
         elif tabla == "Cursos_Profesores":
-            borrar = Cursos_Profesores.delete().where(Cursos_Profesores.cod_curs == primary['cod_curs'] ,
-                                                           Cursos_Profesores.id_prof == primary['id_prof'])
+            borrar = Cursos_Profesores.delete().where(Cursos_Profesores.cod_curs == primary['cod_curs'],
+                                                      Cursos_Profesores.id_prof == primary['id_prof'])
             borrar.execute()
 
         elif tabla == "Cursos_Alumnos":
-            borrar = Cursos_Alumnos.delete().where(Cursos_Alumnos.cod_curs == primary['cod_curs'] ,
-                                                           Cursos_Alumnos.num_exp == primary['num_exp'])
+            borrar = Cursos_Alumnos.delete().where(Cursos_Alumnos.cod_curs == primary['cod_curs'],
+                                                   Cursos_Alumnos.num_exp == primary['num_exp'])
             borrar.execute()
 
         return True
@@ -340,6 +343,7 @@ def delete(tabla, primary):
         print("Fallos en la insercion")
         print(traceback.format_exc())
         return False
+
 
 def update(tabla, campo, primary, dato):
     try:
@@ -355,22 +359,22 @@ def update(tabla, campo, primary, dato):
 
         elif tabla == "Alumnos":
             if campo == "nombre":
-                Alumnos.update(nombre=dato).where(Alumnos.nombre == primary['nombre'] , 
-                                                 Alumnos.apellido == primary['apellido']).execute()
+                Alumnos.update(nombre=dato).where(Alumnos.nombre == primary['nombre'],
+                                                  Alumnos.apellido == primary['apellido']).execute()
             elif campo == "apellido":
-                Alumnos.update(apellido=dato).where(Alumnos.nombre == primary['nombre'] , 
-                                                 Alumnos.apellido == primary['apellido']).execute()
+                Alumnos.update(apellido=dato).where(Alumnos.nombre == primary['nombre'],
+                                                    Alumnos.apellido == primary['apellido']).execute()
             elif campo == "telefono":
-                Alumnos.update(telefono=dato).where(Alumnos.nombre == primary['nombre'] , 
-                                                 Alumnos.apellido == primary['apellido']).execute()
+                Alumnos.update(telefono=dato).where(Alumnos.nombre == primary['nombre'],
+                                                    Alumnos.apellido == primary['apellido']).execute()
             elif campo == "direccion":
-                Alumnos.update(direccion=dato).where(Alumnos.nombre == primary['nombre'] , 
-                                                 Alumnos.apellido == primary['apellido']).execute()
+                Alumnos.update(direccion=dato).where(Alumnos.nombre == primary['nombre'],
+                                                     Alumnos.apellido == primary['apellido']).execute()
             elif campo == "fech_nacim":
-                Alumnos.update(fech_nacim=dato).where(Alumnos.nombre == primary['nombre'] , 
-                                                 Alumnos.apellido == primary['apellido']).execute()
+                Alumnos.update(fech_nacim=dato).where(Alumnos.nombre == primary['nombre'],
+                                                      Alumnos.apellido == primary['apellido']).execute()
         elif tabla == "Cursos":
-            
+
             if campo == "nombre":
                 Cursos.update(nombre=dato).where(Cursos.nombre == primary).execute()
             elif campo == "descripcion":
@@ -381,7 +385,7 @@ def update(tabla, campo, primary, dato):
         print("Fallos en la actualizacion")
         print(traceback.format_exc())
         return False
-    
+
     return 0
 
 
@@ -413,18 +417,18 @@ def select1(tabla, primary):
             entidad = Profesores.select().where(Profesores.dni == primary).get()
 
         elif tabla == "Alumnos":
-            entidad = Alumnos.select().where(Alumnos.nombre == primary['nombre'] , 
+            entidad = Alumnos.select().where(Alumnos.nombre == primary['nombre'],
                                              Alumnos.apellido == primary['apellido']).get()
 
         elif tabla == "Cursos":
             entidad = Cursos.select().where(Cursos.nombre == primary).get()
 
         elif tabla == "Cursos_Profesores":
-            entidad = Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary['cod_curs'] , 
+            entidad = Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary['cod_curs'],
                                                        Cursos_Profesores.id_prof == primary['id_prof']).get()
 
         elif tabla == "Cursos_Alumnos":
-            entidad = Cursos_Alumnos.select().where(Cursos_Alumnos.cod_curs == primary['cod_curs'] , 
+            entidad = Cursos_Alumnos.select().where(Cursos_Alumnos.cod_curs == primary['cod_curs'],
                                                     Cursos_Alumnos.num_exp == primary['num_exp']).get()
 
         return entidad
@@ -432,68 +436,88 @@ def select1(tabla, primary):
         print("Fallos en la seleccion")
         print(traceback.format_exc())
         return None
+
+
 def selectJoinMostrar(tabla, primary):
     try:
         lista = ()
-        if tabla == "Profesor":
-            lista = list(Profesores.select().where(Profesores.dni==primary.dni).dicts())
-            cursos= list(Cursos.select(Cursos.nombre).join(Cursos_Profesores).where(Cursos_Profesores.cod_curs==Cursos.cod_curs , Cursos_Profesores.id_prof==primary.id_prof).dicts())
+        if tabla == "Profesores":
+            lista = list(Profesores.select().where(Profesores.dni == primary.dni).dicts())
+            cursos = list(Cursos.select(Cursos.nombre).join(Cursos_Profesores).where(
+                Cursos_Profesores.cod_curs == Cursos.cod_curs, Cursos_Profesores.id_prof == primary.id_prof).dicts())
             lista.append(cursos)
+
         elif tabla == "Alumnos":
-            lista = list(Profesores.select().where(Alumnos.nombre==primary.nombre,Alumnos.apellido==primary.apellido).dicts())
-            cursos= list(Cursos.select(Cursos.nombre).join(Cursos_Alumnos).where(Cursos.cod_curs==Cursos_Alumnos.cod_curs, Cursos_Alumnos.num_exp==primary.num_exp).dicts())
+            lista = list(Profesores.select().where(Alumnos.nombre == primary.nombre,
+                                                   Alumnos.apellido == primary.apellido).dicts())
+            cursos = list(
+                Cursos.select(Cursos.nombre).join(Cursos_Alumnos).where(Cursos.cod_curs == Cursos_Alumnos.cod_curs,
+                                                                        Cursos_Alumnos.num_exp == primary.num_exp).dicts())
             lista.append(cursos)
+
         elif tabla == "Cursos":
-            lista = list(Profesores.select().dicts())
-            profesor=list(Profesores.select(Profesores)
-                    .join(Cursos_Profesores)
-                    .join(Cursos)
-                    .where(Cursos.cod_curs == primary ,Cursos_Profesores.cod_curs == Cursos.cod_curs , Profesores.id_prof == Cursos_Profesores.id_prof).dicts())
-            alumnos=list(Alumnos.select(Alumnos.nombre , Alumnos.apellido).join(Cursos_Alumnos).where(Alumnos.num_exp==Cursos_Alumnos.num_exp,Cursos_Alumnos.cod_curs==primary.cod_curs).dicts())
+            lista = list(Cursos.select().where(Cursos.nombre == primary.nombre).dicts())
+            profesor = list(Profesores.select(Profesores)
+                            .join(Cursos_Profesores)
+                            .join(Cursos)
+                            .where(Cursos.cod_curs == primary, Cursos_Profesores.cod_curs == Cursos.cod_curs,
+                                   Profesores.id_prof == Cursos_Profesores.id_prof).dicts())
+            alumnos = list(Alumnos.select(Alumnos.nombre, Alumnos.apellido)
+                           .join(Cursos_Alumnos)
+                           .where(Alumnos.num_exp == Cursos_Alumnos.num_exp, Cursos_Alumnos.cod_curs == primary.cod_curs).dicts())
             lista.append(profesor)
             lista.append(alumnos)
+
         return lista
     except:
         print("Fallos en la seleccion")
         print(traceback.format_exc())
         return None
+
+
 def selectJoin(tabla, primary):
     try:
         entidad = None
-        if tabla =="ProfesoresEnCursos":
-            #Si el profesor esta en Cursos_profesores
-            entidad=list((Profesores.select().join(Cursos_Profesores).where(Profesores.dni == primary , Profesores.id_prof==Cursos_Profesores.id_prof)))
+        if tabla == "ProfesoresEnCursos":
+            # Si el profesor esta en Cursos_profesores
+            entidad = list((Profesores.select().join(Cursos_Profesores).where(Profesores.dni == primary,
+                                                                              Profesores.id_prof == Cursos_Profesores.id_prof)))
         elif tabla == "AlumnosEnCursos":
-            #Si el alumno esta en Cursos_alumnos
-            entidad= list((Alumnos.select().join(Cursos_Alumnos).where(Alumnos.nombre == primary['nombre'] , Alumnos.apellido == primary['apellido'] , Alumnos.num_exp==Cursos_Alumnos.num_exp)))
-        elif tabla=="CursosEnAlumnos":
-            #Si el curso esta en Cursos_alumnos
-            entidad=list((Cursos.select().join(Cursos_Alumnos).where(Cursos.cod_curs == primary , Cursos.cod_curs == Cursos_Alumnos.cod_curs)))
-        elif tabla=="CursosEnProfesores":
-             #Si el curso esta en Cursos_profesores
-             entidad = list((Cursos
-                           .select(Cursos)
-                           .join(Cursos_Profesores)
-                           .where(Cursos.cod_curs == primary , Cursos.cod_curs == Cursos_Profesores.cod_curs)))
-             """entidad=list((Cursos.select(Cursos).join(Cursos_Profesores).where(Cursos.nombre == primary , Cursos.cod_curs == Cursos_Profesores.cod_curs)))"""
+            # Si el alumno esta en Cursos_alumnos
+            entidad = list((Alumnos.select().join(Cursos_Alumnos).where(Alumnos.nombre == primary['nombre'],
+                                                                        Alumnos.apellido == primary['apellido'],
+                                                                        Alumnos.num_exp == Cursos_Alumnos.num_exp)))
+        elif tabla == "CursosEnAlumnos":
+            # Si el curso esta en Cursos_alumnos
+            entidad = list((Cursos.select().join(Cursos_Alumnos).where(Cursos.cod_curs == primary,
+                                                                       Cursos.cod_curs == Cursos_Alumnos.cod_curs)))
+        elif tabla == "CursosEnProfesores":
+            # Si el curso esta en Cursos_profesores
+            entidad = list((Cursos
+                            .select(Cursos)
+                            .join(Cursos_Profesores)
+                            .where(Cursos.cod_curs == primary, Cursos.cod_curs == Cursos_Profesores.cod_curs)))
+            """entidad=list((Cursos.select(Cursos).join(Cursos_Profesores).where(Cursos.nombre == primary , Cursos.cod_curs == Cursos_Profesores.cod_curs)))"""
         elif tabla == "Cursos_Profesores":
-            entidad = list((Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary['cod_curs'] , 
-                                                       Cursos_Profesores.id_prof == primary['id_prof'])))
+            entidad = list((Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary['cod_curs'],
+                                                             Cursos_Profesores.id_prof == primary['id_prof'])))
 
         elif tabla == "Cursos_Alumnos":
-            entidad = list((Cursos_Alumnos.select().where(Cursos_Alumnos.cod_curs == primary['cod_curs'] , 
-                                                    Cursos_Alumnos.num_exp == primary['num_exp'])))
+            entidad = list((Cursos_Alumnos.select().where(Cursos_Alumnos.cod_curs == primary['cod_curs'],
+                                                          Cursos_Alumnos.num_exp == primary['num_exp'])))
         elif tabla == "ProfesorEnUnCurso":
             entidad = (Profesores.select(Profesores)
-                    .join(Cursos_Profesores)
-                    .join(Cursos)
-                    .where(Cursos.cod_curs == primary ,Cursos_Profesores.cod_curs == primary , Profesores.id_prof == Cursos_Profesores.id_prof)).get()
+                       .join(Cursos_Profesores)
+                       .join(Cursos)
+                       .where(Cursos.cod_curs == primary, Cursos_Profesores.cod_curs == primary,
+                              Profesores.id_prof == Cursos_Profesores.id_prof)).get()
         elif tabla == "ProfesorEnUnCurso":
             entidad = (Profesores.select(Profesores)
-                    .join(Cursos_Profesores)
-                    .join(Cursos)
-                    .where(Cursos.cod_curs == primary ,Cursos_Profesores.cod_curs == Cursos.cod_curs , Profesores.id_prof == Cursos_Profesores.id_prof)).get()
-        #= GestorBaseDeDatos.selectJoin("ProfesorEnUnCurso",curso.cod_curs)
+                       .join(Cursos_Profesores)
+                       .join(Cursos)
+                       .where(Cursos.cod_curs == primary, Cursos_Profesores.cod_curs == Cursos.cod_curs,
+                              Profesores.id_prof == Cursos_Profesores.id_prof)).get()
+        # = GestorBaseDeDatos.selectJoin("ProfesorEnUnCurso",curso.cod_curs)
         return entidad
     except:
         print("Fallos en la seleccion")

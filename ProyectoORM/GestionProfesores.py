@@ -178,11 +178,18 @@ def buscar():
             if dni is not None:
                 profesor = GestorBaseDeDatos.select1("Profesores", dni)
                 if profesor is not None:
-                    print("Nombre: " + profesor.nombre)
-                    print("Dni: " + profesor.dni)
-                    print("Telefono: " + profesor.telefono)
-                    print("Direccion: " + profesor.direccion)
+                    datos = GestorBaseDeDatos.selectJoinMostrar("Profesores", profesor)
                     print()
+                    print("Nombre: " + datos[0]['nombre'])
+                    print("Dni: " + datos[0]['dni'])
+                    print("Telefono: " + datos[0]['telefono'])
+                    print("Direccion: " + datos[0]['direccion'])
+                    if len(datos[1]) > 0:
+                        for curso in datos[1]:
+                            print("Cursos: ", curso['nombre'], " ", end="")
+                        print()
+                    else:
+                        print()
 
                 else:
                     print("El dni no se corresponde con el de ningun profesor existente." + '\n')
@@ -201,12 +208,20 @@ def mostrarTodos():
     if len(GestorBaseDeDatos.selectAll("Profesores")) > 0:
         print("Mostrar todos los profesores:")
         profesores = GestorBaseDeDatos.selectAll("Profesores")
+        print()
         for profesor in profesores:
-            print()
-            print("Nombre: " + profesor['nombre'])
-            print("Dni: " + profesor['dni'])
-            print("Telefono: " + profesor['telefono'])
-            print("Direccion: " + profesor['direccion'])
+            aux = GestorBaseDeDatos.select1("Profesores", profesor['dni'])
+            datos = GestorBaseDeDatos.selectJoinMostrar("Profesores", aux)
+            print("Nombre: " + datos[0]['nombre'])
+            print("Dni: " + datos[0]['dni'])
+            print("Telefono: " + datos[0]['telefono'])
+            print("Direccion: " + datos[0]['direccion'])
+            if len(datos[1]) > 0:
+                for curso in datos[1]:
+                    print("Cursos: ", curso['nombre'], " ", end="")
+                print('\n')
+            else:
+                print()
 
         print("-" * 20 + "\n")
     else:
