@@ -3,7 +3,6 @@ import GestionProfesores
 import GestionCursos
 import GestionAlumnos
 
-conn = GestorBaseDeDatos.iniciar()
 
 #Profesores
 #-----------------------------------------------------------------
@@ -47,5 +46,3 @@ GestionCursos.mostrarTodos()
 GestionCursos.relacionar()
 
 #-----------------------------------------------------------------
-
-conn.close()

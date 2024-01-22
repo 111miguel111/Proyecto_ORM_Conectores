@@ -1,5 +1,4 @@
 import GestorBaseDeDatos
-import BaseDeDatosM
 import Utiles
 
 
@@ -347,7 +346,7 @@ def relacionar():
                                     while elec2 != "0":
                                         elec2 = input("1. Relacionar\n2. Desrelacionar\n0. Salir\n")
                                         if elec2 == "1":
-                                            relacionCursAlum(curso)
+                                            relacionarCursAlum(curso)
                                         elif elec2 == "2":
                                             desrelacionarCursAlum(curso)
                                         elif elec2 == "0":
