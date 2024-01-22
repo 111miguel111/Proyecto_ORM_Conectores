@@ -213,42 +213,62 @@ def mostrarTodos():
     if len(GestorBaseDeDatos.selectAll("Alumnos")) > 0:
         print("Mostrar todos los alumnos:")
         alumnos = GestorBaseDeDatos.selectAll("Alumnos")
+        print()
         for alumno in alumnos:
-            print()
-            print("Nombre: " + alumno['nombre'])
-            print("Apellido " + alumno['apellido'])
-            print("Telefono: " + alumno['telefono'])
-            print("Direccion: " + alumno['direccion'])
-            fecha = str(alumno["fech_nacim"]).split('-')
+            primary={'nombre':alumno.nombre,
+                    'apellido':alumno.apellido }
+            aux = GestorBaseDeDatos.select1("Alumnos", primary)
+            datos = GestorBaseDeDatos.selectJoinMostrar("Alumnos", aux)
+            print("Nombre: " + datos[0]['nombre'])
+            print("Apellido: " + datos[0]['apellido'])
+            print("Telefono: " + datos[0]['telefono'])
+            print("Direccion: " + datos[0]['direccion'])
+            fecha = str(datos[0]["fech_nacim"]).split('-')
             print("Fecha de nacimiento: " + fecha[2]+"-"+ fecha[1]+"-"+ fecha[0])
+            if len(datos[1]) > 0:
+                for curso in datos[1]:
+                    print("Cursos: ", curso['nombre'], " ", end="")
+                print('\n')
+            else:
+                print()
 
         print("-" * 20 + "\n")
     else:
         print("No hay alumnos creados.")
         print("-" * 20 + "\n")
         
-        
 def mostrarUno():
-    primary={}
-    nombre = Utiles.check_campo("nombre",25)
-    if nombre is not None:
-        print("Introduzca el apellido del alumno.")
-        apellido = Utiles.check_campo("apellido", 25)
-    if apellido is not None:
-        primary={'nombre':nombre,
-                 'apellido':apellido}
-        alumno = GestorBaseDeDatos.select1("Alumnos", primary)
-        print(alumno, type(alumno))
-        if alumno is not None:
-            for alumno in alumnos:
+    if len(GestorBaseDeDatos.selectAll("Alumnos")) > 0:
+        print("Buscar Alumno:")
+        done = False
+        while not done:
+            print("Introduzca el nombre del alumno que desea buscar.")
+            alumno = buscar()
+            if alumno is not None:
+                datos = GestorBaseDeDatos.selectJoinMostrar("Alumnos", alumno)
                 print()
-                print("Nombre: " + alumno['nombre'])
-                print("Apellido " + alumno['apellido'])
-                print("Telefono: " + alumno['telefono'])
-                print("Direccion: " + alumno['direccion'])
-                fecha = str(alumno["fech_nacim"]).split('-')
+                print("Nombre: " + datos[0]['nombre'])
+                print("Apellido: " + datos[0]['apellido'])
+                print("Telefono: " + datos[0]['telefono'])
+                print("Direccion: " + datos[0]['direccion'])
+                fecha = str(datos[0]["fech_nacim"]).split('-')
                 print("Fecha de nacimiento: " + fecha[2]+"-"+ fecha[1]+"-"+ fecha[0])
-            return alumno
-    return None
+                if len(datos[1]) > 0:
+                    for curso in datos[1]:
+                        print("Cursos: ", curso['nombre'], " ", end="")
+                    print()
+                else:
+                    print()
 
+            else:
+                print("El nombre y el apellido no se corresponde con el de ningun alumno existente." + '\n')
+
+            if not Utiles.confirmacion("Quieres tratar de buscar otro alumno?"):
+                done = True
+                print("-" * 20 + "\n")
+            else:
+                print("\n")
+    else:
+        print("No hay alumnos creados")
+        print("-" * 20 + "\n")
 
