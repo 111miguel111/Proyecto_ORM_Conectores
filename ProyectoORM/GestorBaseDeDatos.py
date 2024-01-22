@@ -457,10 +457,10 @@ def selectJoinMostrar(tabla, primary):
 
         elif tabla == "Cursos":
             lista = list(Cursos.select().where(Cursos.nombre == primary.nombre).dicts())
-            profesor = list(Profesores.select(Profesores)
+            profesor = list(Profesores.select(Profesores.nombre, Profesores.dni)
                             .join(Cursos_Profesores)
                             .join(Cursos)
-                            .where(Cursos.cod_curs == primary, Cursos_Profesores.cod_curs == Cursos.cod_curs,
+                            .where(Cursos.cod_curs == primary.cod_curs, Cursos_Profesores.cod_curs == Cursos.cod_curs,
                                    Profesores.id_prof == Cursos_Profesores.id_prof).dicts())
             alumnos = list(Alumnos.select(Alumnos.nombre, Alumnos.apellido)
                            .join(Cursos_Alumnos)

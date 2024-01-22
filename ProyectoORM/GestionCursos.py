@@ -134,9 +134,21 @@ def buscar():
             if nombre is not None:
                 curso = GestorBaseDeDatos.select1("Cursos", nombre)
                 if curso is not None:
-                    print("Nombre: " + curso.nombre)
-                    print("Descripcion: " + curso.descripcion)
                     print()
+                    datos = GestorBaseDeDatos.selectJoinMostrar("Cursos", curso)
+                    print("Nombre: " + datos[0]['nombre'])
+                    print("Descripcion: " + datos[0]['descripcion'])
+                    if len(datos[1]) > 0:  # Hay profesores
+                        print("Profesor: ", datos[1][0]['nombre'], datos[1][0]['dni'])
+                    else:
+                        print("Profesor: No tiene.")
+                    if len(datos[2]) > 0:  # Hay alumnos
+                        print("Alumnos: | ", end="")
+                        for alumnos in datos[2]:
+                            print(alumnos["nombre"], " | ", end="")
+                        print('\n')
+                    else:
+                        print("Alumnos: No tiene.")
 
                 else:
                     print("El nombre no se corresponde con el de ningun curso existente." + '\n')
@@ -155,11 +167,23 @@ def mostrarTodos():
     if len(GestorBaseDeDatos.selectAll("Cursos")) > 0:
         print("Mostrar todos los cursos:")
         cursos = GestorBaseDeDatos.selectAll("Cursos")
+        print()
         for curso in cursos:
-            print()
-            print("Nombre: " + curso['nombre'])
-            print("Descripcion: " + curso['descripcion'])
-
+            aux = GestorBaseDeDatos.select1("Cursos", curso["nombre"])
+            datos = GestorBaseDeDatos.selectJoinMostrar("Cursos", aux)
+            print("Nombre: " + datos[0]['nombre'])
+            print("Descripcion: " + datos[0]['descripcion'])
+            if len(datos[1]) > 0: #Hay profesores
+                print("Profesor: ", datos[1][0]['nombre'], datos[1][0]['dni'])
+            else:
+                print("Profesor: No tiene.")
+            if len(datos[2]) > 0: #Hay alumnos
+                print("Alumnos: | ", end="")
+                for alumnos in datos[2]:
+                    print(alumnos["nombre"], " | ", end="")
+                print('\n')
+            else:
+                print("Alumnos: No tiene.")
         print("-" * 20 + "\n")
     else:
         print("No hay cursos creados.")
@@ -251,7 +275,7 @@ def relacionarCursAlum(curso):
             if len(aux) > 0:    #Hay alumno
                 aux = GestorBaseDeDatos.selectJoin("Cursos_Alumnos", datos)
                 print(aux)
-                if aux is not None:    #El alumno ya esta en el curso
+                if len(aux) > 0:    #El alumno ya esta en el curso
                     print(alumno.nombre + " " + alumno.apellido + " ya esta matriculado en " + curso.nombre)
                 else:   #El alumno no esta en el curso
                     if Utiles.confirmacion("Seguro que quieres que " + alumno.nombre + " " + alumno.apellido + " sea matriculado en " + curso.nombre + "?\n "):

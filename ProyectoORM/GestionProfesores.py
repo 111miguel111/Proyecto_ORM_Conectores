@@ -221,7 +221,7 @@ def mostrarTodos():
                     print("Cursos: ", curso['nombre'], " ", end="")
                 print('\n')
             else:
-                print()
+                print("Cursos: No imparte.")
 
         print("-" * 20 + "\n")
     else:
