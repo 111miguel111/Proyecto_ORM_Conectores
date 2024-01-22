@@ -20,7 +20,7 @@ GestionProfesores.mostrarTodos()
 #Alumnos
 #-----------------------------------------------------------------
 
-GestionAlumnos.alta()
+#GestionAlumnos.alta()
 
 #GestionAlumnos.baja()
 
@@ -35,7 +35,7 @@ GestionAlumnos.mostrarTodos()
 
 #GestionCursos.alta()
 
-#GestionCursos.baja()
+GestionCursos.baja()
 
 #GestionCursos.modificar()
 
@@ -43,6 +43,6 @@ GestionAlumnos.mostrarTodos()
 
 GestionCursos.mostrarTodos()
 
-GestionCursos.relacionar()
+#GestionCursos.relacionar()
 
 #-----------------------------------------------------------------

@@ -25,7 +25,7 @@ def alta():
             done = True
             print("-" * 20 + "\n")
         else:
-            print("\n")
+            print()
 
 
 def baja():
@@ -39,9 +39,9 @@ def baja():
                 if curso is not None:
                     if Utiles.confirmacion("Seguro que desea eliminar " + curso.nombre + " del centro?"):
                         if GestorBaseDeDatos.delete("Cursos", nombre):
-                            print('Alta realizada con exito' + '\n')
+                            print('Baja realizada con exito' + '\n')
                         else:
-                            print('Fallo al realizar el alta.' + '\n')
+                            print('Fallo al realizar el baja.' + '\n')
                     else:
                         print("Baja cancelada." + '\n')
                 else:
@@ -174,7 +174,7 @@ def relacionCursProf(curso):
         if profesor is not None:
             datos = {"cod_curs": curso.cod_curs,
                      "id_prof": profesor.id_prof}
-            print(curso.nombre, curso.cod_curs)
+
             aux = GestorBaseDeDatos.selectJoin("CursosEnProfesores", curso.cod_curs)
 
             if len(aux) > 0:    #Hay profesor
@@ -182,12 +182,20 @@ def relacionCursProf(curso):
                 if len(aux) > 0:    #El profesor es el profesor actual del curso
                     print(profesor.nombre + " ya es el profesor de " + curso.nombre)
                 else:   #Hay que sustiruir al profesor
-                    if Utiles.confirmacion("Seguro que quieres que " + profesor.nombre + " imparta " + curso.nombre + "?\n Esto sobre escribira el profesor actual de " +curso.nombre):
-                        if GestorBaseDeDatos.insert("Cursos_Profesores", datos):
-                            print("Relacion realizda con exito." + '\n')
+                    oldProf = (GestorBaseDeDatos.Profesores.select(GestorBaseDeDatos.Profesores)
+                               .join(GestorBaseDeDatos.Cursos_Profesores).join(GestorBaseDeDatos.Cursos)
+                               .where(GestorBaseDeDatos.Cursos.cod_curs == curso.cod_curs & GestorBaseDeDatos.Cursos_Profesores.cod_curs == GestorBaseDeDatos.Cursos.cod_curs & GestorBaseDeDatos.Profesores.id_prof == GestorBaseDeDatos.Cursos_Profesores.id_prof)).get()
+
+
+                    datos2 = {'cod_curs': curso.cod_curs, 'id_prof': oldProf.id_prof}
+                    if Utiles.confirmacion("Seguro que quieres que " + profesor.nombre + " sustituya a " + oldProf.nombre + " en el curso: " + curso.nombre + "? Esto sobre escribira el profesor actual de " +curso.nombre):
+                        if GestorBaseDeDatos.delete("Cursos_Profesores", datos2):
+                            if GestorBaseDeDatos.insert("Cursos_Profesores", datos):
+                                print("Relacion realizda con exito." + '\n')
+                            else:
+                                print("La modificacion no se pudo realizar." + '\n')
                         else:
                             print("La modificacion no se pudo realizar." + '\n')
-
                     else:
                         print("Relacion cancelada." + "\n")
             else:   #No hay profesor
@@ -205,8 +213,10 @@ def relacionCursProf(curso):
 
 def desrelacionarCursProf(curso):
     if len(GestorBaseDeDatos.selectJoin("CursosEnProfesores", curso.cod_curs)) > 0:
-        profesor = (GestorBaseDeDatos.Profesores.select(GestorBaseDeDatos.Profesores).join(GestorBaseDeDatos.Cursos_Profesores).join(GestorBaseDeDatos.Cursos)
-                         .where(GestorBaseDeDatos.Cursos.cod_curs == curso.cod_curs & GestorBaseDeDatos.Cursos_Profesores.cod_curs == GestorBaseDeDatos.Cursos.cod_curs & GestorBaseDeDatos.Profesores.id_prof == GestorBaseDeDatos.Cursos_Profesores.id_prof)).get()
+        profesor = (GestorBaseDeDatos.Profesores.select(GestorBaseDeDatos.Profesores)
+                    .join(GestorBaseDeDatos.Cursos_Profesores)
+                    .join(GestorBaseDeDatos.Cursos)
+                    .where(GestorBaseDeDatos.Cursos.cod_curs == curso.cod_curs, GestorBaseDeDatos.Cursos_Profesores.cod_curs == GestorBaseDeDatos.Cursos.cod_curs, GestorBaseDeDatos.Profesores.id_prof == GestorBaseDeDatos.Cursos_Profesores.id_prof)).get()
 
         print(profesor, type(profesor))
         if Utiles.confirmacion("Seguro que quiere que " + str(profesor.nombre) + " deje de ser el profesor de " + curso.nombre):
@@ -298,9 +308,12 @@ def desrelacionarCursAlum(curso):
 def relacionar():
     if len(GestorBaseDeDatos.selectAll("Alumnos")) > 0 or len(GestorBaseDeDatos.selectAll("Profesores")) > 0:
         if len(GestorBaseDeDatos.selectAll("Cursos")) > 0:
-            lista = GestorBaseDeDatos.selectAll("Cursos")
-            print(lista, type(lista))
             print("Relacionar curso:")
+            lista = GestorBaseDeDatos.selectAll("Cursos")
+            print("Cursos existentes: ", end="")
+            for curso in lista:
+                print(curso['nombre'], " ", end="")
+            print()
             done = False
             while not done:
                 nombre = Utiles.check_campo("nombre", 25)

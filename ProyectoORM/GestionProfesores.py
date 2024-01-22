@@ -34,7 +34,7 @@ def alta():
             done = True
             print("-" * 20 + "\n")
         else:
-            print("\n")
+            print()
 
 
 def baja():

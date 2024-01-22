@@ -1,6 +1,7 @@
+import Menu
 
+print("Inicio practica Peewee de Miguel Gonzalez y Antonio Leon.")
 
+Menu.menuPrincipal()
 
-print("-----"*10)
-print("Hello world!")
-print("Efectivamente las 5 primeras lineas no son del main, este empieza en el Hello world!")
+print("Fin practica Peewee.")
