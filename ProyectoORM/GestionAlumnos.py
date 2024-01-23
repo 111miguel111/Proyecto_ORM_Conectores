@@ -3,9 +3,12 @@ import Utiles
 
 
 def alta():
+    """
+    Funcion que pide los campos para el insert y, si todos son correctos pide a la bbdd que realice el insert.
+    """
     print("Alta alumno:")
     done = False
-    while not done:
+    while not done:  #Este bucle se asegura de que se puedan dar de alta mas de un alumno.
         primary={}
         nombre = None
         apellido = None
