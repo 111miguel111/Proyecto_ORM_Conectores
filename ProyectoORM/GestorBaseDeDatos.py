@@ -30,7 +30,7 @@ def iniciarFicheroConfiguracion():
     '''
     try:
         # Creamos un fichero .ini en el cual se guardan datos para la configuracion del programa
-        config = configparser.ConfigParser()  # Creamos la variable
+        config = configparser.ConfigParser()  # Creamos la variable que contiene los datos de configuracion
         config['SERVER'] = {'host': 'localhost',
                             'user': 'root',
                             'password': '1234',
@@ -152,7 +152,7 @@ def mysqlconnect():
         user_variable = str(config['SERVER']['user'])
         password_variable = str(config['SERVER']['password'])
         port_variable = int(config['SERVER']['port'])
-
+        #Una vez tenemos las variables guardadas realizamos la conexion
         conn = pymysql.connect(
             host=host_variable,
             user=user_variable,
@@ -160,7 +160,7 @@ def mysqlconnect():
             port=port_variable
         )
         return conn
-    # Si la conexion no se puede realizar ya sea por que  el gestor de base de datos esta apagado nos informara
+    # Si la conexion no se puede realizar por que el gestor de base de datos esta apagado nos informara
     except pymysql.err.OperationalError as e:
         print(
             "Se ha producido un error, compruebe que el sistema gestor de base de datos al que se quiere conectar \nesta operativa y que los datos son correctos.\nEl programa se cerrara")
@@ -184,23 +184,33 @@ def mysqlconnect():
 
 
 def crearTablas(conn):
+    '''
+    Funcion encargada de realizar la creacion de las tablas con peewee
+    '''
     try:
+        #Creamos todas las tablas dentro de la base de datos
         conn.create_tables([Profesores, Alumnos, Cursos, Cursos_Profesores, Cursos_Alumnos])
         print("Se han creado las tablas bien.")
+        #Si falla algo informaremos de esto
     except Exception:
         print(traceback.format_exc())
         print("No se pudieron crear las tablas.")
 
 
 def conectarAPeewee():
+     '''
+    Funcion encargada de conectar peewee a la base de datos
+    :return devolveremos una conexion para enlazarla en los meta de los modelos de las tablas
+    '''
     try:
+        #Obtenemos la informacion del fichero de oniguracion
         config = configparser.ConfigParser()
         config.read('config.ini')
         host_variable = str(config['SERVER']['host'])
         user_variable = str(config['SERVER']['user'])
         password_variable = str(config['SERVER']['password'])
         port_variable = int(config['SERVER']['port'])
-
+        #Una vez ya tenemos las variables con los datos para la conexion nos conectamos con peewee
         conn = MySQLDatabase('miguel_antonio_bd',
                              user=user_variable,
                              password=password_variable,
@@ -211,7 +221,7 @@ def conectarAPeewee():
         conn.connect()
 
         return conn
-    # Si la conexion no se puede realizar ya sea por que  el gestor de base de datos esta apagado nos informara
+    # Si la conexion no se puede realizar nos informara
     except:
         print(
             "Hay un error en la conexion. \n1.Quieres restablecer el fichero con los valores por defecto \n2.Quieres cerrar el programa ")
@@ -231,10 +241,12 @@ def conectarAPeewee():
 
 def iniciar():
     '''
-    Funcion encargada de iniciar lo relacionado con la base de datos, la configuracion la conexion, crear las tablas etc
+    Funcion encargada de iniciar lo relacionado con la base de datos, la configuracion, la conexion para crear la base de datos, etc.
+    :return Si la base de datos se realiza con exito devolveremos True en caso de que suceda algun problema devolveremos False
     '''
-    # Metodo que inicia lo relacionado con la base de datos, comprueba el fichero de datos, comprueba la conexion y si esta bien procede a crear una base de datos con las tablas necesarias
+    # Funcion que inicia lo relacionado con la base de datos, comprueba el fichero de datos, comprueba la conexion y si esta bien procede a crear una base de datos
     try:
+    #Primero confirmamos que el fichero de configuracion existe y no esta corrupto
         if (checkFileExistance(
                 "config.ini") == True):  # Comprobamos que el fichero de configuracion existe, si no es el caso lo creamos con los datos por defecto
             if (checkConfigBien("config.ini") == False):  # Comprobamos que el fichero de configuracion esta bien
@@ -255,8 +267,7 @@ def iniciar():
                     sys.exit()  # Cerramos el programa ya que no deberia continuar tras este error
         else:
             iniciarFicheroConfiguracion()
-        # Llama a la conexion para comprobar si esta funciona
-        # Creamos la bbdd en pymysql
+
         conn = mysqlconnect()  # Nos conectamos
         cur = conn.cursor()  # Creamos un cursor que se usara para crear la base de datos y las tablas correspondientes
         cur.execute("CREATE DATABASE IF NOT EXISTS miguel_antonio_bd")
@@ -274,7 +285,8 @@ def iniciar():
 def insert(tabla, datos):
     """
     Funcion encargada de la realizacion de los inserts en la bbdd.
-    :param conn es la conexion, tabla es la tabla a la que corresponde el insert, datos es un diccionario con los datos del insert
+    :param tabla es la tabla a la que corresponde el insert, datos es un diccionario con los datos del insert
+    :return Si la insercion se ha realizado con exito deolveremos true en caso contrario devolveremos False
     """
     try:
         if tabla == "Profesores":
@@ -312,7 +324,8 @@ def insert(tabla, datos):
 def delete(tabla, primary):
     """
     Funcion encargada de la realizacion de los inserts en la bbdd.
-    :param conn es la conexion, tabla es la tabla a la que corresponde el insert, datos es un diccionario con los datos del insert
+    :param tabla es la tabla a la que corresponde el delete, datos es un diccionario con los datos para realizar el delete
+    :return Si el dlete se ha realizado con exito deolveremos true en caso contrario devolveremos False
     """
     try:
         if tabla == "Profesores":
@@ -346,8 +359,14 @@ def delete(tabla, primary):
 
 
 def update(tabla, campo, primary, dato):
+    """
+    Funcion encargada de la realizacion de los update en la bbdd.
+    :param tabla es la tabla a la que corresponde el update, campo es el campo que deseamos actualizar en la bbdd, primary es un diccionario con los datos necesarios para realizar el update, dato es el dato nuevo que queremos añadir en el update
+    :return Si el update se ha realizado con exito deolveremos true en caso contrario devolveremos False
+    """
     try:
         if tabla == "Profesores":
+            #Depeniendo del campo que queramos modificar entraremos a un if u otro
             if campo == "dni":
                 Profesores.update(dni=dato).where(Profesores.dni == primary).execute()
             elif campo == "nombre":
@@ -358,6 +377,7 @@ def update(tabla, campo, primary, dato):
                 Profesores.update(direccion=dato).where(Profesores.dni == primary).execute()
 
         elif tabla == "Alumnos":
+            #Depeniendo del campo que queramos modificar entraremos a un if u otro
             if campo == "nombre":
                 Alumnos.update(nombre=dato).where(Alumnos.nombre == primary['nombre'],
                                                   Alumnos.apellido == primary['apellido']).execute()
@@ -374,7 +394,7 @@ def update(tabla, campo, primary, dato):
                 Alumnos.update(fech_nacim=dato).where(Alumnos.nombre == primary['nombre'],
                                                       Alumnos.apellido == primary['apellido']).execute()
         elif tabla == "Cursos":
-
+            #Depeniendo del campo que queramos modificar entraremos a un if u otro
             if campo == "nombre":
                 Cursos.update(nombre=dato).where(Cursos.nombre == primary).execute()
             elif campo == "descripcion":
@@ -390,6 +410,11 @@ def update(tabla, campo, primary, dato):
 
 
 def selectAll(tabla):
+    """
+    Funcion encargada de la realizacion de los selectAll de la bbdd.
+    :param tabla es la tabla a la que corresponde al select
+    :return Si el select se ha realizado con exito deolveremos un diccionario en caso contrario devolveremos None
+    """
     try:
         lista = ()
         if tabla == "Profesores":
@@ -411,6 +436,11 @@ def selectAll(tabla):
 
 
 def select1(tabla, primary):
+    """
+    Funcion encargada de la realizacion de los select de la bbdd.
+    :param tabla es la tabla a la que corresponde al select, primary es un diccionario con los datos necesarios para hacer la seleccion
+    :return Si el select se ha realizado con exito deolveremos un diccionario en caso contrario devolveremos None
+    """
     try:
         entidad = None
         if tabla == "Profesores":
@@ -439,15 +469,23 @@ def select1(tabla, primary):
 
 
 def selectJoinMostrar(tabla, primary):
+    """
+    Funcion encargada de la realizacion de los selectJoin para mostrar de la bbdd.
+    :param tabla es la tabla a la que corresponde al select,primay es un diccionario con la informacion necesaria para hacer el select
+    :return Si el select se ha realizado con exito deolveremos un diccionario con diccionarios dentro en caso contrario devolveremos None
+    """
     try:
         lista = ()
+
         if tabla == "Profesores":
+            #Obtenemos los datos de caada parte de la seleccion y despues añadiremos los datos secundarios
             lista = list(Profesores.select().where(Profesores.dni == primary.dni).dicts())
             cursos = list(Cursos.select(Cursos.nombre).join(Cursos_Profesores).where(
                 Cursos_Profesores.cod_curs == Cursos.cod_curs, Cursos_Profesores.id_prof == primary.id_prof).dicts())
             lista.append(cursos)
 
         elif tabla == "Alumnos":
+            #Obtenemos los datos de caada parte de la seleccion y despues añadiremos los datos secundarios
             lista = list(Profesores.select().where(Alumnos.nombre == primary.nombre,
                                                    Alumnos.apellido == primary.apellido).dicts())
             cursos = list(
@@ -456,6 +494,7 @@ def selectJoinMostrar(tabla, primary):
             lista.append(cursos)
 
         elif tabla == "Cursos":
+            #Obtenemos los datos de caada parte de la seleccion y despues añadiremos los datos secundarios
             lista = list(Cursos.select().where(Cursos.nombre == primary.nombre).dicts())
             profesor = list(Profesores.select(Profesores.nombre, Profesores.dni)
                             .join(Cursos_Profesores)
@@ -476,48 +515,52 @@ def selectJoinMostrar(tabla, primary):
 
 
 def selectJoin(tabla, primary):
+    """
+    Funcion encargada de la realizacion de los selectJoin para trabajar de la bbdd.
+    :param tabla es el tipo de seleccion qu ueremos haccer, primay es un diccionario con la informacion necesaria para hacer el select
+    :return Si el select se ha realizado con exito deolveremos un diccionario en caso contrario devolveremos None
+    """
     try:
         entidad = None
+        #Saber si un profesor esta relacionado con algun curso
         if tabla == "ProfesoresEnCursos":
             # Si el profesor esta en Cursos_profesores
             entidad = list((Profesores.select().join(Cursos_Profesores).where(Profesores.dni == primary,
                                                                               Profesores.id_prof == Cursos_Profesores.id_prof)))
+        #Saber si un alumno esta matriculado en algun curso
         elif tabla == "AlumnosEnCursos":
             # Si el alumno esta en Cursos_alumnos
             entidad = list((Alumnos.select().join(Cursos_Alumnos).where(Alumnos.nombre == primary['nombre'],
                                                                         Alumnos.apellido == primary['apellido'],
                                                                         Alumnos.num_exp == Cursos_Alumnos.num_exp)))
+
+        # Si el curso esta en Cursos_alumnos
         elif tabla == "CursosEnAlumnos":
-            # Si el curso esta en Cursos_alumnos
             entidad = list((Cursos.select().join(Cursos_Alumnos).where(Cursos.cod_curs == primary,
                                                                        Cursos.cod_curs == Cursos_Alumnos.cod_curs)))
+        # Si el curso esta en Cursos_profesores
         elif tabla == "CursosEnProfesores":
-            # Si el curso esta en Cursos_profesores
             entidad = list((Cursos
                             .select(Cursos)
                             .join(Cursos_Profesores)
                             .where(Cursos.cod_curs == primary, Cursos.cod_curs == Cursos_Profesores.cod_curs)))
-            """entidad=list((Cursos.select(Cursos).join(Cursos_Profesores).where(Cursos.nombre == primary , Cursos.cod_curs == Cursos_Profesores.cod_curs)))"""
+
         elif tabla == "Cursos_Profesores":
             entidad = list((Cursos_Profesores.select().where(Cursos_Profesores.cod_curs == primary['cod_curs'],
                                                              Cursos_Profesores.id_prof == primary['id_prof'])))
-
+        #Saber si hay cursos con alumnos
         elif tabla == "Cursos_Alumnos":
             entidad = list((Cursos_Alumnos.select().where(Cursos_Alumnos.cod_curs == primary['cod_curs'],
                                                           Cursos_Alumnos.num_exp == primary['num_exp'])))
+        #Saber si hay un profesor en un cuso
         elif tabla == "ProfesorEnUnCurso":
             entidad = (Profesores.select(Profesores)
                        .join(Cursos_Profesores)
                        .join(Cursos)
                        .where(Cursos.cod_curs == primary, Cursos_Profesores.cod_curs == primary,
                               Profesores.id_prof == Cursos_Profesores.id_prof)).get()
-        elif tabla == "ProfesorEnUnCurso":
-            entidad = (Profesores.select(Profesores)
-                       .join(Cursos_Profesores)
-                       .join(Cursos)
-                       .where(Cursos.cod_curs == primary, Cursos_Profesores.cod_curs == Cursos.cod_curs,
-                              Profesores.id_prof == Cursos_Profesores.id_prof)).get()
-        # = GestorBaseDeDatos.selectJoin("ProfesorEnUnCurso",curso.cod_curs)
+
+
         return entidad
     except:
         print("Fallos en la seleccion")
@@ -525,18 +568,16 @@ def selectJoin(tabla, primary):
         return None
 
 
+#Creamos la variable conn para inicializarla
 conn = None
-# ES LA MIERDA MAS GRANDE DE LA NOCHE TAL VEZ, HE PROBADO UN MONTON DE COSAS, TAMBIEN, FUNCIONA COMO UN TIRO, ALSO YES
+#Comprobamos que la conexion esta bien y si este es el caso rrreaalizamos la conexion con peewee si no cerramos el programa
 if (iniciar()):
-    conn = conectarAPeewee()  # SOLO SE CONECTA Y DEVULEVE CONN NADA MAS
+    conn = conectarAPeewee()
 else:
     sys.exit()  # Cerramos el programa ya que no deberia continuar tras este error
 
 
-# LOS CLASS NO HE ENCONTRADO LA MANERA DE QUE ESTEN DENTRO DE UNA FUNCION, POR COJONES ESTAN FUERA
-# A LA HORA DEL CONN NO ME GUSTA HACERLO GLOBAL PORQUE NO ME GUSTA
-# LA OTRA OPCION ESQUE EN CADA "database = conn" PONER "database = conestarAPeewee()" PERO ESO CREO QUE ES PEOR QUE UN CONN GLOBAL
-
+#Las diferentes class para tener las tablas en peewee
 class Profesores(Model):
     id_prof = AutoField()  # Equivale al auto_increment
     dni = CharField(null=False, unique=True)
@@ -590,6 +631,5 @@ class Cursos_Alumnos(Model):
         primary_key = CompositeKey('cod_curs', 'num_exp')
 
 
-# SI INTENTO PONER EL CREAR TABLAS EN CAULQUIER OTRO SITIO QUE NO SEA JUSTAMENTE DESPUES DE LOS CLASS ME DICE QUE LAS CLASSES NO ESTAN DEFINIDAS
-# Y OBVIAMENTE SI EL IF DE MIERDA LOPONGO AQUI ABAJO LAS CLASES ME DICEN QUE CONN NO ESTA DEFINIDA
+#Tras tener los modelos crearemos las tablas
 crearTablas(conn)
