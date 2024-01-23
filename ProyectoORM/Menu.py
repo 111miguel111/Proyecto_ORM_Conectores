@@ -6,7 +6,7 @@ import GestionCursos
 def menuPrincipal():
     salida = False
     while not salida:
-        print("-" * 5, "Menu principañ", "-" * 5, "\n1. Gestion Alumnos", "\n2. Gestion Profesores", "\n3. Gestion Cursos", "\n0. Salir")
+        print("-" * 5, "Menu principal", "-" * 5, "\n1. Gestion Alumnos", "\n2. Gestion Profesores", "\n3. Gestion Cursos", "\n0. Salir")
         respuesta = input()
         if respuesta is not None:
             if respuesta == "0":
