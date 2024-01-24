@@ -82,6 +82,8 @@ def modificacion(curso):
             if nueNomb is not None and GestorBaseDeDatos.select1("Cursos", nueNomb) is None: #Si es valido y no pertenece a otro curso
                 if Utiles.confirmacion("Seguro que desea modificar el nombre " + curso.nombre + " por " + nueNomb + "?"): #Se pide confirmacion
                     if GestorBaseDeDatos.update("Cursos", "nombre", curso.nombre, nueNomb): #Si el update sale bien se notifica
+                        curso.nombre = nueNomb #Actualizamos datos para posibles updates sucesivos
+                        curso = GestorBaseDeDatos.select1("Cursos", curso.nombre)
                         print("Modificacion realizda con exito." + '\n')
                     else:
                         print("La modificacion no se pudo realizar." + '\n')
@@ -97,6 +99,7 @@ def modificacion(curso):
                 if Utiles.confirmacion("Seguro que desea modificar la descripcion " + curso.descripcion + " por " + nueDesc + "?"): #Confirmacion
                     if GestorBaseDeDatos.update("Cursos", "descripcion", curso.nombre, nueDesc): #Si el update sale bien se notifica
                         print("Modificacion realizda con exito." + '\n')
+                        curso = GestorBaseDeDatos.select1("Cursos", curso.nombre)
                     else:
                         print("La modificacion no se pudo realizar." + '\n')
                 else:
@@ -364,8 +367,8 @@ def relacionar():
     """
     Funcion que relaciona cursos con alumnos y profesores.
     """
-    if len(GestorBaseDeDatos.selectAll("Alumnos")) > 0 or len(GestorBaseDeDatos.selectAll("Profesores")) > 0: #S no hay profesores ni alumnos no pasas
-        if len(GestorBaseDeDatos.selectAll("Cursos")) > 0: #SI no hay cursos no pasas
+    if len(GestorBaseDeDatos.selectAll("Cursos")) > 0:  # SI no hay cursos no pasas
+        if len(GestorBaseDeDatos.selectAll("Alumnos")) > 0 or len(GestorBaseDeDatos.selectAll("Profesores")) > 0:  # S no hay profesores ni alumnos no pasas
             print("Relacionar curso:")
             lista = GestorBaseDeDatos.selectAll("Cursos") #Todos los cursos, para que el usuario sepa que puede relacionar
             print("Cursos existentes: ", end="")
@@ -455,10 +458,9 @@ def relacionar():
                     print("-" * 20 + "\n")
                 else:
                     print("\n")
-
         else:
-            print("No hay cursos creados.")
+            print("No hay ni profesores ni alumnos creados.")
             print("-" * 20 + "\n")
     else:
-        print("No hay ni profesores ni alumnos creados.")
+        print("No hay cursos creados.")
         print("-" * 20 + "\n")

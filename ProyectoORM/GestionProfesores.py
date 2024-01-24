@@ -92,6 +92,7 @@ def modificacion(profesor):
             if nueNomb is not None: #Se comprueba que son validos
                 if Utiles.confirmacion("Seguro que desea modificar el nombre " + profesor.nombre + " por " + nueNomb + "?"): #Pedimos confirmacion
                     if GestorBaseDeDatos.update("Profesores", "nombre", profesor.dni, nueNomb): #Si el update sale bien se notifica.
+                        profesor = GestorBaseDeDatos.select1("Profesores", profesor.dni)
                         print("Modificacion realizda con exito." + '\n')
                     else:
                         print("La modificacion no se pudo realizar." + '\n')
@@ -103,6 +104,8 @@ def modificacion(profesor):
             if nueDni is not None and GestorBaseDeDatos.select1("Profesores", nueDni) is None: #Se comprueba que es valido y no pertenece a ningun profesor
                 if Utiles.confirmacion("Seguro que desea modificar el dni " + profesor.dni + " por " + nueDni + "?"): #Pedimos confirmacion
                     if GestorBaseDeDatos.update("Profesores", "dni", profesor.dni, nueDni): #Updateamos
+                        profesor.dni = nueDni #Actualizamos campo
+                        profesor = GestorBaseDeDatos.select1("Profesores", profesor.dni)
                         print("Modificacion realizda con exito." + '\n')
                     else:
                         print("La modificacion no se pudo realizar." + '\n')
@@ -119,6 +122,7 @@ def modificacion(profesor):
                 if Utiles.confirmacion(
                         "Seguro que desea modificar el telefono " + profesor.telefono + " por " + nueTelf + "?"):
                     if GestorBaseDeDatos.update("Profesores", "telefono", profesor.dni, nueTelf):
+                        profesor = GestorBaseDeDatos.select1("Profesores", profesor.dni)
                         print("Modificacion realizda con exito." + '\n')
                     else:
                         print("La modificacion no se pudo realizar." + '\n')
@@ -128,9 +132,9 @@ def modificacion(profesor):
         elif elec == "4": #Direccion. Es lo mismo que nombre
             nueDire = Utiles.check_campo("direccion", 25)
             if nueDire is not None:
-                if Utiles.confirmacion(
-                        "Seguro que desea modificar la direccion " + profesor.direccion + " por " + nueDire + "?"):
+                if Utiles.confirmacion("Seguro que desea modificar la direccion " + profesor.direccion + " por " + nueDire + "?"):
                     if GestorBaseDeDatos.update("Profesores", "direccion", profesor.dni, nueDire):
+                        profesor = GestorBaseDeDatos.select1("Profesores", profesor.dni)
                         print("Modificacion realizda con exito." + '\n')
                     else:
                         print("La modificacion no se pudo realizar." + '\n')
