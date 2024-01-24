@@ -1,10 +1,6 @@
-"""
-Este fichero Python se encarga de agrupar funciones que apoyo que verifican la introduccion de datos por el usuario, asi como la gestion de estos
-"""
 from datetime import datetime
 
 
-# UTILES
 def confirmacion(contexto):
     '''
     Metodo para confirmar si se quiere confirmar una operacion

@@ -39,7 +39,48 @@ def iniciarFicheroConfiguracion():
             config.write(configfile)
         print("Se ha creado el fichero de configuracion")
     except:
-        print("No se ha podido crear el fichero de configuracion")
+        print('No se ha podido crear el fichero de configuracion, el programa se cerrara. ')
+        sys.exit()  # Cerramos el programa ya que no deberia continuar tras este error
+    return 0
+
+
+def iniciarFicheroConfiguracionManulamente():
+    '''
+    Funcion que se encarga de crear el fichero de configuracion con valores que se le pediran al usuario
+    '''
+    host=None
+    user=None
+    password=None
+    port=None
+    #Pedimos los datos para crear el ficheo de configuracion
+    print("El fichero de configuracion no existe porfavor introduce los campos a poner en el fichero")
+    host=Utiles.check_campo("host", 25)
+    if host is not None:
+        user=Utiles.check_campo("user",25)
+    if user is not None:
+        if Utiles.confirmacion("Deseas poner contrasenia o dejar el campo en blanco?"):  # Preguntamos si quiere dar otro alumno de baja
+                password=Utiles.check_campo("password",25)
+        else:
+            password=""
+    if password is not None:
+        port=escanerNumerico()
+    if port is not None:
+        try:
+            # Creamos un fichero .ini en el cual se guardan datos para la configuracion del programa
+            config = configparser.ConfigParser()  # Creamos la variable que contiene los datos de configuracion
+            config['SERVER'] = {'host': str(host),
+                                'user': str(user),
+                                'password': str(password),
+                                'port': str(port)}
+            with open('config.ini', 'w') as configfile:  # Escribimos el fichero de configuracion
+                config.write(configfile)
+            print("Se ha creado el fichero de configuracion")
+        except:
+            print('No se ha podido crear el fichero de configuracion, el programa se cerrara. \nComprueba que has introducido bien los datos.\nEl fichero se llama "config.ini". ')
+            sys.exit()  # Cerramos el programa ya que no deberia continuar tras este error
+    else:
+        print('No se ha podido crear el fichero de configuracion, el programa se cerrara. ')
+        sys.exit()  # Cerramos el programa ya que no deberia continuar tras este error
     return 0
 
 
@@ -116,29 +157,6 @@ def checkConfigBien(filePath):
         return False
 
 
-def conectarse(conn):
-    '''
-    Funcion encargada de usar la base de datos y devolver un cursor
-    :return Devuelve un cursor conectado a la base de datos
-    '''
-    # Creamos un nuevo cursor y nos aseguramos de usar la base de datos correcta
-    cur = conn.cursor()
-    cur.execute('USE miguel_roberto')
-    return cur
-
-
-def deconectarse(conn):
-    '''
-    Funcion encargada de desconectarse de la la base de datos y cerrar la conexion
-    :param conn:
-    '''
-    # Guardamos culaquier cambio en la conexion y la cerramos
-    conn.commit()
-    conn.close()
-    print("La conexion ha terminado ")
-    return 0
-
-
 def mysqlconnect():
     '''
     Funcion encargada de realizar la conexion si hay algun problema en la conexion informara al usuario.
@@ -193,12 +211,12 @@ def crearTablas(conn):
         print("Se han creado las tablas bien.")
         #Si falla algo informaremos de esto
     except Exception:
-        print(traceback.format_exc())
+        #print(traceback.format_exc())
         print("No se pudieron crear las tablas.")
 
 
 def conectarAPeewee():
-     '''
+    '''
     Funcion encargada de conectar peewee a la base de datos
     :return devolveremos una conexion para enlazarla en los meta de los modelos de las tablas
     '''
@@ -217,7 +235,7 @@ def conectarAPeewee():
                              host=host_variable,
                              port=port_variable)
 
-        print(conn, type(conn))
+        
         conn.connect()
 
         return conn
@@ -266,7 +284,7 @@ def iniciar():
                     print("El programa se cerrara")
                     sys.exit()  # Cerramos el programa ya que no deberia continuar tras este error
         else:
-            iniciarFicheroConfiguracion()
+            iniciarFicheroConfiguracionManulamente()
 
         conn = mysqlconnect()  # Nos conectamos
         cur = conn.cursor()  # Creamos un cursor que se usara para crear la base de datos y las tablas correspondientes
@@ -317,7 +335,7 @@ def insert(tabla, datos):
         return True
     except:
         print("Fallos en la insercion")
-        print(traceback.format_exc())
+        #print(traceback.format_exc())
         return False
 
 
@@ -353,8 +371,8 @@ def delete(tabla, primary):
 
         return True
     except:
-        print("Fallos en la insercion")
-        print(traceback.format_exc())
+        print("Fallos en el delete")
+        #print(traceback.format_exc())
         return False
 
 
@@ -403,7 +421,7 @@ def update(tabla, campo, primary, dato):
         return True
     except:
         print("Fallos en la actualizacion")
-        print(traceback.format_exc())
+        #print(traceback.format_exc())
         return False
 
     return 0
@@ -430,7 +448,7 @@ def selectAll(tabla):
         return lista
     except:
         print("Fallos en la seleccion")
-        print(traceback.format_exc())
+        #print(traceback.format_exc())
         return None
     return 0
 
@@ -464,7 +482,7 @@ def select1(tabla, primary):
         return entidad
     except:
         print("Fallos en la seleccion")
-        print(traceback.format_exc())
+        #print(traceback.format_exc())
         return None
 
 
@@ -510,7 +528,7 @@ def selectJoinMostrar(tabla, primary):
         return lista
     except:
         print("Fallos en la seleccion")
-        print(traceback.format_exc())
+        #print(traceback.format_exc())
         return None
 
 
@@ -564,7 +582,7 @@ def selectJoin(tabla, primary):
         return entidad
     except:
         print("Fallos en la seleccion")
-        print(traceback.format_exc())
+        #print(traceback.format_exc())
         return None
 
 
