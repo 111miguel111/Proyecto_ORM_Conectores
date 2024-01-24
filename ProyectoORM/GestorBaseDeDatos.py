@@ -6,20 +6,25 @@ import sys
 import traceback
 
 
-def escanerNumerico():
-    '''
-    Metodo para escanear una cadena con solo numeros
-    :return Si la cadena es valida devuelve la cadena, si no devuelve None
-    '''
+def escanerNumerico(contexto):
+    """
+    Funcion que cerciora que la cadena que se introduce no este vacia y sean numeros
+    :param contexto: informcacion sobre el campo
+    :return: respuesta: si el campo es correcto
+    :return: None: si el campo esta vacio
+    """
     # Se crea un contador de intentos para el bucle que solo iterara hasta 5 intentos
     intentos = 0
     while (intentos < 5):
+        print(contexto.capitalize() + ": ")
         scan = input()
         # Se introduce la cadena y comprueba que no este vacio y que ponga 1 o 2 si no te vuelve a preguntar y si fallas 5 veces devulve none
-        if (scan.isspace() == False and scan.isnumeric() and (scan == '1' or scan == '2')):
+        if (scan.isspace() == False and scan.isnumeric() ):
             return scan
         intentos += 1
-        print('Porfavor introduce numeros no decimales')
+        print('Porfavor introduce solo numeros no decimales.'+'\n')
+        if fallos < 5:
+            print("Fallos hasta salir", fallos, "/5")
     print("Has superado el numero de intentos")
     return None
 
@@ -58,12 +63,12 @@ def iniciarFicheroConfiguracionManulamente():
     if host is not None:
         user=Utiles.check_campo("user",25)
     if user is not None:
-        if Utiles.confirmacion("Deseas poner contrasenia o dejar el campo en blanco?"):  # Preguntamos si quiere dar otro alumno de baja
-                password=Utiles.check_campo("password",25)
+        if Utiles.confirmacion("Deseas poner contrasenia ?"):  # Preguntamos si quiere dar otro alumno de baja
+            password=Utiles.check_campo("password",25)
         else:
             password=""
     if password is not None:
-        port=escanerNumerico()
+        port=escanerNumerico("port")
     if port is not None:
         try:
             # Creamos un fichero .ini en el cual se guardan datos para la configuracion del programa
