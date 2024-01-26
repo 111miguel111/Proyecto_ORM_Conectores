@@ -234,9 +234,9 @@ def relacionCursProf(curso):
                 else:   #Hay que sustiruir al profesor.
                     oldProf = GestorBaseDeDatos.selectJoin("ProfesorEnUnCurso", curso.cod_curs)
 
-                    datos2 = {'cod_curs': curso.cod_curs, 'id_prof': oldProf.id_prof} #Datos del prof antiguo.
+                    datos2 = {'cod_curs': curso.cod_curs, 'id_prof': oldProf[0].id_prof} #Datos del prof antiguo.
                     #Se pide confirmacion.
-                    if Utiles.confirmacion("Seguro que quieres que " + profesor.nombre + " sustituya a " + oldProf.nombre + " en el curso: " + curso.nombre + "? Esto sobre escribira el profesor actual de " +curso.nombre):
+                    if Utiles.confirmacion("Seguro que quieres que " + profesor.nombre + " sustituya a " + oldProf[0].nombre + " en el curso: " + curso.nombre + "? Esto sobre escribira el profesor actual de " +curso.nombre):
                         if GestorBaseDeDatos.delete("Cursos_Profesores", datos2): #Si el delete sale bien.
                             if GestorBaseDeDatos.insert("Cursos_Profesores", datos): #Se inserta, y si sale bien se notifica.
                                 print("Relacion realizda con exito." + '\n')
@@ -265,11 +265,12 @@ def desrelacionarCursProf(curso):
     :param curso: el peewee model del curso que sera desrelacionado.
     """
     if len(GestorBaseDeDatos.selectJoin("CursosEnProfesores", curso.cod_curs)) > 0: #Si el curso tiene profesor puedes pasar si no no.
-        profesor = GestorBaseDeDatos.selectJoin("CursosEnProfesores", curso.cod_curs) #Un select para saber los datos del profesor.
+        profesor = GestorBaseDeDatos.selectJoin("ProfesorEnUnCurso", curso.cod_curs) #Un select para saber los datos del profesor.
         #Confirmacion.
-        if Utiles.confirmacion("Seguro que quiere que " + str(profesor.nombre) + " deje de ser el profesor de " + curso.nombre):
+        print(profesor, type(profesor))
+        if Utiles.confirmacion("Seguro que quiere que " + str(profesor[0].nombre) + " deje de ser el profesor de " + curso.nombre):
             datos = {"cod_curs": curso.cod_curs,
-                     "id_prof": profesor.id_prof} #Datos de curso y profeor.
+                     "id_prof": profesor[0].id_prof} #Datos de curso y profeor.
             if GestorBaseDeDatos.delete("Cursos_Profesores", datos): #Si el delete sale bien se notifica.
                 print("Desrelacion realizda con exito." + '\n')
             else:

@@ -577,11 +577,11 @@ def selectJoin(tabla, primary):
                                                           Cursos_Alumnos.num_exp == primary['num_exp'])))
         #Saber si hay un profesor en un cuso
         elif tabla == "ProfesorEnUnCurso":
-            entidad = (Profesores.select(Profesores)
+            entidad = list((Profesores.select()
                        .join(Cursos_Profesores)
                        .join(Cursos)
                        .where(Cursos.cod_curs == primary, Cursos_Profesores.cod_curs == primary,
-                              Profesores.id_prof == Cursos_Profesores.id_prof)).get()
+                              Profesores.id_prof == Cursos_Profesores.id_prof)))
 
 
         return entidad
