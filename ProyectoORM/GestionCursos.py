@@ -267,7 +267,6 @@ def desrelacionarCursProf(curso):
     if len(GestorBaseDeDatos.selectJoin("CursosEnProfesores", curso.cod_curs)) > 0: #Si el curso tiene profesor puedes pasar si no no.
         profesor = GestorBaseDeDatos.selectJoin("ProfesorEnUnCurso", curso.cod_curs) #Un select para saber los datos del profesor.
         #Confirmacion.
-        print(profesor, type(profesor))
         if Utiles.confirmacion("Seguro que quiere que " + str(profesor[0].nombre) + " deje de ser el profesor de " + curso.nombre):
             datos = {"cod_curs": curso.cod_curs,
                      "id_prof": profesor[0].id_prof} #Datos de curso y profeor.
