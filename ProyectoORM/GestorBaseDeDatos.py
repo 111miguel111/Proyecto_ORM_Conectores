@@ -339,7 +339,7 @@ def insert(tabla, datos):
 
         return True
     except:
-        print("Fallos en la insercion")
+        #print("Fallos en la insercion")
         #print(traceback.format_exc())
         return False
 
@@ -376,7 +376,7 @@ def delete(tabla, primary):
 
         return True
     except:
-        print("Fallos en el delete")
+        #print("Fallos en el delete")
         #print(traceback.format_exc())
         return False
 
@@ -425,7 +425,7 @@ def update(tabla, campo, primary, dato):
 
         return True
     except:
-        print("Fallos en la actualizacion")
+        #print("Fallos en la actualizacion")
         #print(traceback.format_exc())
         return False
 
@@ -452,7 +452,7 @@ def selectAll(tabla):
             lista = list(Cursos_Alumnos.select().dicts())
         return lista
     except:
-        print("Fallos en la seleccion")
+        #print("Fallos en la seleccion")
         #print(traceback.format_exc())
         return None
     return 0
@@ -486,7 +486,7 @@ def select1(tabla, primary):
 
         return entidad
     except:
-        print("Fallos en la seleccion")
+        #print("Fallos en la seleccion")
         #print(traceback.format_exc())
         return None
 
@@ -509,7 +509,7 @@ def selectJoinMostrar(tabla, primary):
 
         elif tabla == "Alumnos":
             #Obtenemos los datos de caada parte de la seleccion y despues añadiremos los datos secundarios
-            lista = list(Profesores.select().where(Alumnos.nombre == primary.nombre,
+            lista = list(Alumnos.select().where(Alumnos.nombre == primary.nombre,
                                                    Alumnos.apellido == primary.apellido).dicts())
             cursos = list(
                 Cursos.select(Cursos.nombre).join(Cursos_Alumnos).where(Cursos.cod_curs == Cursos_Alumnos.cod_curs,
@@ -532,8 +532,8 @@ def selectJoinMostrar(tabla, primary):
 
         return lista
     except:
-        print("Fallos en la seleccion")
-        #print(traceback.format_exc())
+        #print("Fallos en la seleccion")
+        print(traceback.format_exc())
         return None
 
 
@@ -586,7 +586,7 @@ def selectJoin(tabla, primary):
 
         return entidad
     except:
-        print("Fallos en la seleccion")
+        #print("Fallos en la seleccion")
         #print(traceback.format_exc())
         return None
 

@@ -205,6 +205,7 @@ def mostrarTodos():
                 print('\n')
             else:
                 print("Alumnos: No tiene.")
+            print()
         print("-" * 20 + "\n")
     else:
         print("No hay cursos creados.")

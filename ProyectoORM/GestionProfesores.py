@@ -240,7 +240,7 @@ def mostrarTodos():
                 print('\n')
             else:
                 print("Cursos: No imparte.")
-
+            print()
         print("-" * 20 + "\n")
     else:
         print("No hay profesores creados")

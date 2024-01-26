@@ -233,8 +233,8 @@ def mostrarTodos():
         alumnos = GestorBaseDeDatos.selectAll("Alumnos") #Cogemos todos los alumnos
         print()
         for alumno in alumnos: #Por cada alumno en la lista
-            primary = {'nombre': alumno.nombre,
-                       'apellido': alumno.apellido} #Datos del alumno
+            primary = {'nombre': alumno['nombre'],
+                       'apellido': alumno['apellido']} #Datos del alumno
             aux = GestorBaseDeDatos.select1("Alumnos", primary) #Peewee model auxiliar
             datos = GestorBaseDeDatos.selectJoinMostrar("Alumnos", aux) #Datos completos (con cursos del alumno)
             print("Nombre: " + datos[0]['nombre']) #Print del alumno
@@ -242,7 +242,7 @@ def mostrarTodos():
             print("Telefono: " + datos[0]['telefono'])
             print("Direccion: " + datos[0]['direccion'])
             fecha = str(datos[0]["fech_nacim"]).split('-')
-            print("Fecha de nacimiento: " + fecha[2]+"-"+ fecha[1]+"-"+ fecha[0])
+            print("Fecha de nacimiento: " + fecha[2]+"-" + fecha[1] + "-" + fecha[0])
             if len(datos[1]) > 0: #Si tiene cursos
                 for curso in datos[1]: #se recorren y printean
                     print("Cursos: ", curso['nombre'], " ", end="")
