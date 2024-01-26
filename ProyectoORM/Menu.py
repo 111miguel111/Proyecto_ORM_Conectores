@@ -24,7 +24,7 @@ def menuPrincipal():
 def menuAlumnos():
     salida = False
     while not salida:
-        print("\t", "-" * 5, "Menu Alumnos",  "-" * 5, "\n\t1. Alta", "\n\t2. Baja", "\n\t3. Modificar", "\n\t4. Buscar", "\n\t5. Mostrar todos", "\n\t0. volver")
+        print("\t", "-" * 5, "Menu Alumnos",  "-" * 5, "\n\t1. Alta", "\n\t2. Baja", "\n\t3. Modificar", "\n\t4. Buscar", "\n\t5. Mostrar todos", "\n\t0. Volver")
         respuesta = input()
         if respuesta is not None:
             if respuesta == "0":
@@ -48,7 +48,7 @@ def menuAlumnos():
 def menuProfesores():
     salida = False
     while not salida:
-        print("\t", "-" * 5, "Menu Profesores", "-" * 5, "\n\t1. Alta", "\n\t2. Baja", "\n\t3. Modificar", "\n\t4. Buscar", "\n\t5. Mostrar todos", "\n\t0. volver")
+        print("\t", "-" * 5, "Menu Profesores", "-" * 5, "\n\t1. Alta", "\n\t2. Baja", "\n\t3. Modificar", "\n\t4. Buscar", "\n\t5. Mostrar todos", "\n\t0. Volver")
         respuesta = input()
         if respuesta is not None:
             if respuesta == "0":
@@ -72,7 +72,7 @@ def menuProfesores():
 def menuCursos():
     salida = False
     while not salida:
-        print("\t", "-" * 5, "Menu Cursos", "-" * 5, "\n\t1. Alta", "\n\t2. Baja", "\n\t3. Modificar", "\n\t4. Buscar","\n\t5. Mostrar todos", "\n\t6. relacionar", "\n\t0. volver")
+        print("\t", "-" * 5, "Menu Cursos", "-" * 5, "\n\t1. Alta", "\n\t2. Baja", "\n\t3. Modificar", "\n\t4. Buscar","\n\t5. Mostrar todos", "\n\t6. Relacionar", "\n\t0. Volver")
         respuesta = input()
         if respuesta is not None:
             if respuesta == "0":

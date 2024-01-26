@@ -204,7 +204,7 @@ def modificacion(alumno):
         elif elec == "5": #fecha de nacimiento igual que telefono
             fech_nacim=Utiles.check_fecha()
             if fech_nacim is not None:
-                if Utiles.confirmacion("Seguro que desea modificar la fecha de nacimiento " + alumno.fech_nacim + " por " + fech_nacim + "?"):
+                if Utiles.confirmacion("Seguro que desea modificar la fecha de nacimiento " + str(alumno.fech_nacim) + " por " + fech_nacim + "?"):
                     if GestorBaseDeDatos.update("Alumnos", "fech_nacim", primary, fech_nacim):
                         alumno=GestorBaseDeDatos.select1("Alumnos", primary)
                         print("Modificacion realizda con exito." + '\n')
@@ -248,7 +248,7 @@ def mostrarTodos():
                     print("Cursos: ", curso['nombre'], " ", end="")
                 print('\n')
             else:
-                print()
+                print("Cursos: No imparte")
 
         print("-" * 20 + "\n")
     else:
@@ -280,7 +280,7 @@ def mostrarUno():
                         print("Cursos: ", curso['nombre'], " ", end="")
                     print()
                 else:
-                    print()
+                    print("Cursos: No imparte")
 
             else:
                 print("El nombre y el apellido no se corresponde con el de ningun alumno existente." + '\n')
