@@ -248,7 +248,7 @@ def mostrarTodos():
                     print("Cursos: ", curso['nombre'], " ", end="")
                 print('\n')
             else:
-                print("Cursos: No imparte")
+                print("Cursos: No asiste.")
             print()
 
         print("-" * 20 + "\n")
@@ -281,7 +281,7 @@ def mostrarUno():
                         print("Cursos: ", curso['nombre'], " ", end="")
                     print()
                 else:
-                    print("Cursos: No imparte")
+                    print("Cursos: No asiste.")
 
             else:
                 print("El nombre y el apellido no se corresponde con el de ningun alumno existente." + '\n')
@@ -292,6 +292,6 @@ def mostrarUno():
             else:
                 print("\n")
     else:
-        print("No hay alumnos creados")
+        print("No hay alumnos creados.")
         print("-" * 20 + "\n")
 
