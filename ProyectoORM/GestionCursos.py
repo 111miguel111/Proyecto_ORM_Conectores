@@ -15,12 +15,12 @@ def alta():
             descripcion = Utiles.check_campo("Descripcion", 50) #Se continuan pidiendo datos
         else:
             if GestorBaseDeDatos.select1("Cursos", nombre) is not None: #Si es valido pero pertenece a otro curso.
-                print("El nombre pertenece a otro curso")
+                print("El nombre pertenece a otro curso.")
         if descripcion is not None: #Si todos los datos son correcto.
             datos = {'nombre': nombre,
                      'descripcion': descripcion} #Se crea un diccionario con los datos que se mandara al insert
             if GestorBaseDeDatos.insert('Cursos', datos): #Se manda el insert y si sale bien se notifica
-                print('Alta realizada con exito' + '\n')
+                print('Alta realizada con exito.' + '\n')
             else: #SI sale mal se notifica el fallo.
                 print('Fallo al realizar el alta.' + '\n')
 
@@ -45,7 +45,7 @@ def baja():
                 if curso is not None: #Si existe el peewee model
                     if Utiles.confirmacion("Seguro que desea eliminar " + curso.nombre + " del centro?"): #Se pide confirmacion
                         if GestorBaseDeDatos.delete("Cursos", nombre): #Si el delete sale bien se notifica
-                            print('Baja realizada con exito' + '\n')
+                            print('Baja realizada con exito.' + '\n')
                         else:
                             print('Fallo al realizar el baja.' + '\n')
                     else:
@@ -91,7 +91,7 @@ def modificacion(curso):
                     print("Modificacion cancelada." + '\n')
             else:
                 if GestorBaseDeDatos.select1("Cursos", nueNomb) is not None: #Si es valido pero pertenece a un profesor existente
-                    print("El nombre pertenece a otro curso")
+                    print("El nombre pertenece a otro curso.")
 
         elif elec == "2": #Direccion
             nueDesc = Utiles.check_campo("descripcion", 25) #Dato
@@ -112,7 +112,7 @@ def modificacion(curso):
             cont += 1
             print("Fallos ", cont, "/5")
             if cont == 5: #Si llegas a 5 fallos te echo.
-                print("Cometiste demasiados fallos")
+                print("Cometiste demasiados fallos.")
                 elec = "0"
 
 
@@ -273,7 +273,7 @@ def desrelacionarCursProf(curso):
             if GestorBaseDeDatos.delete("Cursos_Profesores", datos): #Si el delete sale bien se notifica.
                 print("Desrelacion realizda con exito." + '\n')
             else:
-                print("Hubo un error en la desrelacion")
+                print("Hubo un error en la desrelacion.")
         else:
             print("Relacion cancelada." + "\n")
     else: #El curso no tenia profesor que desrelacionar
@@ -353,7 +353,7 @@ def desrelacionarCursAlum(curso):
                         if GestorBaseDeDatos.delete("Cursos_Alumnos", datos): #Se hace el delete y si sale bien se notifica.
                             print("Desrelacion realizda con exito." + '\n')
                         else:
-                            print("Hubo un error en la desrelacion")
+                            print("Hubo un error en la desrelacion.")
                     else:
                         print("Relacion cancelada." + "\n")
                 else:   #El alumno no esta en el curso.
@@ -361,7 +361,7 @@ def desrelacionarCursAlum(curso):
             else:
                 print("El nombre y apellido no se corresponden con el de ningun alumno existente." + '\n')
     else:
-        print(curso.nombre + " no tiene alumnos que desrelacionar."+ "\n")
+        print(curso.nombre + " no tiene alumnos que desrelacionar." + "\n")
 
 
 def relacionar():
@@ -385,13 +385,13 @@ def relacionar():
                         elec = ""
                         cont = 0
                         while elec != "0": #Para que se decida el usuario que es lo que quiere relacionar
-                            elec = input("1. Relacion cursos con profesores\n2. Relacionar cursos con alumnos\n0. Salir\n")
+                            elec = input("1. Relacionar cursos con profesores.\n2. Relacionar cursos con alumnos.\n0. Salir.\n")
                             if elec == "1": #Profesores
                                 if len(GestorBaseDeDatos.selectAll("Profesores")) > 0: #Por si pasas habiendo alumnos pero no profes
                                     elec2 = ""
                                     cont2 = 0
                                     while elec2 != "0": #Por si quieres hacer mas de una cosa
-                                        elec2 = input("1. Relacionar\n2. Desrelacionar\n0. Salir\n")
+                                        elec2 = input("1. Relacionar.\n2. Desrelacionar.\n0. Salir.\n")
                                         if elec2 == "1":
                                             relacionCursProf(curso) #Relacionar curs y profs
                                         elif elec2 == "2":
@@ -419,7 +419,7 @@ def relacionar():
                                     elec2 = ""
                                     cont2 = 0
                                     while elec2 != "0": #Para elegir mas de una accion
-                                        elec2 = input("1. Relacionar\n2. Desrelacionar\n0. Salir\n")
+                                        elec2 = input("1. Relacionar.\n2. Desrelacionar.\n0. Salir.\n")
                                         if elec2 == "1":
                                             relacionarCursAlum(curso) #Relacionar alumnos cursos
                                         elif elec2 == "2":
