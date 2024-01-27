@@ -23,8 +23,8 @@ def escanerNumerico(contexto):
             return scan
         intentos += 1
         print('Porfavor introduce solo numeros no decimales.'+'\n')
-        if fallos < 5:
-            print("Fallos hasta salir", fallos, "/5")
+        if intentos < 5:
+            print("Fallos hasta salir", intentos, "/5")
     print("Has superado el numero de intentos.")
     return None
 
