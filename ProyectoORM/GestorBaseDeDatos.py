@@ -73,10 +73,10 @@ def iniciarFicheroConfiguracionManulamente():
         try:
             # Creamos un fichero .ini en el cual se guardan datos para la configuracion del programa
             config = configparser.ConfigParser()  # Creamos la variable que contiene los datos de configuracion
-            config['SERVER'] = {'host': str(host),
-                                'user': str(user),
-                                'password': str(password),
-                                'port': str(port)}
+            config['SERVER'] = {'host': str(host).lower(),
+                                'user': str(user).lower(),
+                                'password': str(password).lower(),
+                                'port': str(port).lower()}
             with open('config.ini', 'w') as configfile:  # Escribimos el fichero de configuracion
                 config.write(configfile)
             print("Se ha creado el fichero de configuracion.")
@@ -276,7 +276,8 @@ def iniciar():
                 # Si hay algun error informamos al usuario
                 print(
                     "Hay un error en el fichero de configuracion: \n1.Quieres restablecer el fichero con los valores por defecto. \n2.Quieres cerrar el programa.")
-                opcion = escanerNumerico()
+                
+                opcion = escanerNumerico("Opcion")
                 if (opcion == '1'):
                     print("El fichero de configuracion sera restablecido y el programa se cerrara.")
                     iniciarFicheroConfiguracion()
