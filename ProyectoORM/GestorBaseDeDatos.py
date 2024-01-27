@@ -63,7 +63,7 @@ def iniciarFicheroConfiguracionManulamente():
     if host is not None:
         user=Utiles.check_campo("user",25)
     if user is not None:
-        if Utiles.confirmacion("Deseas poner contrasenia ?"):  # Preguntamos si quiere dar otro alumno de baja
+        if Utiles.confirmacion("Deseas poner contrasenia ?\n Si o No."):  # Preguntamos si quiere dar otro alumno de baja
             password=Utiles.check_campo("password",25)
         else:
             password=""
