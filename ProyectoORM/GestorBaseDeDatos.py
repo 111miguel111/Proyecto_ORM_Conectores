@@ -3,7 +3,7 @@ from peewee import *
 import configparser
 import Utiles
 import sys
-import traceback
+#import traceback
 
 
 def escanerNumerico(contexto):
