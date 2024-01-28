@@ -18,7 +18,7 @@ def alta():
             nombre = Utiles.check_campo("nombre", 25)
         else:
             if GestorBaseDeDatos.select1("Profesores", dni) is not None: #Si el dni perteneciese lo notifica
-                print("El dni pertenece a otro profesor")
+                print("El dni pertenece a otro profesor.")
         if nombre is not None:
             telefono = Utiles.check_telefono()
         if telefono is not None:

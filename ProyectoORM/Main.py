@@ -1,7 +1,9 @@
 import Menu
+import GestorBaseDeDatos
 
-print("Inicio practica Peewee de Miguel Gonzalez y Antonio Leon.")
+print("\nInicio practica Peewee de Miguel Gonzalez y Antonio Leon.\n")
 
 Menu.menuPrincipal()
 
-print("Fin practica Peewee.")
+GestorBaseDeDatos.cerrarBD()
+print("\nFin practica Peewee.")

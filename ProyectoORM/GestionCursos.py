@@ -84,7 +84,7 @@ def modificacion(curso):
                     if GestorBaseDeDatos.update("Cursos", "nombre", curso.nombre, nueNomb): #Si el update sale bien se notifica
                         curso.nombre = nueNomb #Actualizamos datos para posibles updates sucesivos
                         curso = GestorBaseDeDatos.select1("Cursos", curso.nombre)
-                        print("Modificacion realizda con exito." + '\n')
+                        print("Modificacion realizada con exito." + '\n')
                     else:
                         print("La modificacion no se pudo realizar." + '\n')
                 else:
@@ -98,7 +98,7 @@ def modificacion(curso):
             if nueDesc is not None: #Si es valido
                 if Utiles.confirmacion("Seguro que desea modificar la descripcion " + curso.descripcion + " por " + nueDesc + "?"): #Confirmacion
                     if GestorBaseDeDatos.update("Cursos", "descripcion", curso.nombre, nueDesc): #Si el update sale bien se notifica
-                        print("Modificacion realizda con exito." + '\n')
+                        print("Modificacion realizada con exito." + '\n')
                         curso = GestorBaseDeDatos.select1("Cursos", curso.nombre)
                     else:
                         print("La modificacion no se pudo realizar." + '\n')
@@ -239,7 +239,7 @@ def relacionCursProf(curso):
                     if Utiles.confirmacion("Seguro que quieres que " + profesor.nombre + " sustituya a " + oldProf[0].nombre + " en el curso: " + curso.nombre + "? Esto sobre escribira el profesor actual de " +curso.nombre):
                         if GestorBaseDeDatos.delete("Cursos_Profesores", datos2): #Si el delete sale bien.
                             if GestorBaseDeDatos.insert("Cursos_Profesores", datos): #Se inserta, y si sale bien se notifica.
-                                print("Relacion realizda con exito." + '\n')
+                                print("Relacion realizada con exito." + '\n')
                             else:
                                 print("La modificacion no se pudo realizar." + '\n')
                         else:
@@ -250,7 +250,7 @@ def relacionCursProf(curso):
                 #Se pide confirmacion del insert.
                 if Utiles.confirmacion("Seguro que quieres que " + profesor.nombre + " imparta " + curso.nombre + "?"):
                     if GestorBaseDeDatos.insert("Cursos_Profesores", datos): #Se realiza el nsert y si sale bien se notifica.
-                        print("Relacion realizda con exito." + '\n')
+                        print("Relacion realizada con exito." + '\n')
                     else:
                         print("La modificacion no se pudo realizar." + '\n')
                 else:
@@ -271,7 +271,7 @@ def desrelacionarCursProf(curso):
             datos = {"cod_curs": curso.cod_curs,
                      "id_prof": profesor[0].id_prof} #Datos de curso y profeor.
             if GestorBaseDeDatos.delete("Cursos_Profesores", datos): #Si el delete sale bien se notifica.
-                print("Desrelacion realizda con exito." + '\n')
+                print("Desrelacion realizada con exito." + '\n')
             else:
                 print("Hubo un error en la desrelacion.")
         else:
@@ -308,7 +308,7 @@ def relacionarCursAlum(curso):
                     #Se pide confirmacion.
                     if Utiles.confirmacion("Seguro que quieres que " + alumno.nombre + " " + alumno.apellido + " sea matriculado en " + curso.nombre + "?\n "):
                         if GestorBaseDeDatos.insert("Cursos_Alumnos", datos): #Si el insert sale bien se notifica.
-                            print("Relacion realizda con exito." + '\n')
+                            print("Relacion realizada con exito." + '\n')
                         else:
                             print("La relacion no se pudo realizar." + '\n')
 
@@ -318,7 +318,7 @@ def relacionarCursAlum(curso):
                 #Se pide confirmacion.
                 if Utiles.confirmacion("Seguro que quieres que " + alumno.nombre + " " + alumno.apellido + " sea matriculado en " + curso.nombre + "?\n "):
                     if GestorBaseDeDatos.insert("Cursos_Alumnos", datos): #Si el insert es correcto se notifica.
-                        print("Relacion realizda con exito." + '\n')
+                        print("Relacion realizada con exito." + '\n')
                     else:
                         print("La modificacion no se pudo realizar." + '\n')
                 else:
@@ -351,7 +351,7 @@ def desrelacionarCursAlum(curso):
                     #SI se da confirmacion.
                     if Utiles.confirmacion("Seguro que quiere desmatricular " + str(alumno.nombre) + " " + str(alumno.apellido) + " de " + curso.nombre):
                         if GestorBaseDeDatos.delete("Cursos_Alumnos", datos): #Se hace el delete y si sale bien se notifica.
-                            print("Desrelacion realizda con exito." + '\n')
+                            print("Desrelacion realizada con exito." + '\n')
                         else:
                             print("Hubo un error en la desrelacion.")
                     else:

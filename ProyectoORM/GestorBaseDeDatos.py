@@ -218,7 +218,8 @@ def crearTablas(conn):
     except Exception:
         #print(traceback.format_exc())
         print("No se pudieron crear las tablas.")
-
+        print("El programa se cerrara.")
+        sys.exit()  # Cerramos el programa ya que no deberia continuar tras este error
 
 def conectarAPeewee():
     '''
@@ -261,6 +262,14 @@ def conectarAPeewee():
             print("Opcion no valida, el programa se cerrara.")
             sys.exit()  # Cerramos el programa ya que no deberia continuar tras este error
 
+    
+def cerrarBD():
+    try:
+        print("Desconectando la base de datos.")
+        conn.close()
+    except:
+        #print(traceback.format_exc())
+        return None
 
 def iniciar():
     '''

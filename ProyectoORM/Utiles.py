@@ -149,7 +149,7 @@ def check_fecha():
     """
     fallos = 0
     while fallos < 5:
-        print("Recuerde el formato de la fecha es DD-MM-YYYY.")
+        print("Recuerde el formato de la fecha es DD-MM-YYYY y que el anio minimo es 1990 y el maximo 2024.")
         fecha = entrada_teclado("fecha")
         if fecha is not None:
             if fecha.count("-") == 2:
@@ -158,9 +158,9 @@ def check_fecha():
                     dia = int(datos[0])
                     mes = int(datos[1])
                     year = int(datos[2])
-                    if ((mes in [1, 3, 5, 7, 8, 10, 12] and 1 <= dia <= 31 and 1990 <= year <= 2023) or
-                            (mes in [4, 6, 9, 11] and 1 <= dia <= 30 and 1990 <= year <= 2023) or
-                            (mes == 2 and 1 <= dia <= 28 and 1990 <= year <= 2023)):
+                    if ((mes in [1, 3, 5, 7, 8, 10, 12] and 1 <= dia <= 31 and 1990 <= year <= 2024) or
+                            (mes in [4, 6, 9, 11] and 1 <= dia <= 30 and 1990 <= year <= 2024) or
+                            (mes == 2 and 1 <= dia <= 28 and 1990 <= year <= 2024)):
 
                         print("Fecha valida.")
                         return datetime.strptime(str(dia) + "/" + str(mes) + "/" + str(year), "%d/%m/%Y").strftime(
