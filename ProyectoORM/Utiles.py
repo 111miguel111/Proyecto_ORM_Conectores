@@ -8,7 +8,7 @@ def confirmacion(contexto):
     '''
     cont = 0
     while cont < 5:
-        print(contexto)
+        print(contexto,"(Si o No)")
         inputConfirmacion = input()
         if inputConfirmacion.lower() == 'si':
             return True
@@ -16,7 +16,7 @@ def confirmacion(contexto):
             return False
         else:
             if cont < 4:
-                print("\nValor incorrecto, pruebe otra vez (Si o no)."+"\n")
+                print("\nValor incorrecto, pruebe otra vez (Si o No)."+"\n")
             cont += 1
     print("Has superado el numero de intentos."+"\n")
     return False
@@ -60,7 +60,7 @@ def check_campo(contexto, long):
             if not carac_no_valido:
                 long = int(long)
                 if 0 < len(campo) <= long:  # Verificamos la longitud del campo
-                    print(contexto.capitalize() + " introducido con exito.")
+                    print(contexto.capitalize() + " es valido.")
                     return campo.capitalize()
                 else:
                     print(contexto + " tiene una longitud no valida, longitud maxima: " + str(long)+".\n")
@@ -94,7 +94,7 @@ def check_dni():
             if len(dni) == 9:
                 if dni[0:8].isnumeric():  # Es cerrado por la izquierda abierto por la derecha
                     if dni[8].isalpha():  # Solo coge el noveno caracter
-                        print("DNI introducido con exito.")
+                        print("DNI es valido.")
                         return dni.upper()
                     else:
                         print("El ultimo caracter debe tratarse de una letra."+"\n")
@@ -125,7 +125,7 @@ def check_telefono():
         if campo is not None:
             if campo.isnumeric():
                 if len(campo) == 9:
-                    print("Telefono introducido con exito.")
+                    print("Telefono es valido.")
                     return campo
                 else:
                     print("Telefono tiene una longituz no valida, longitud debe ser: 9."+"\n")
@@ -162,7 +162,7 @@ def check_fecha():
                             (mes in [4, 6, 9, 11] and 1 <= dia <= 30 and 1990 <= year <= 2023) or
                             (mes == 2 and 1 <= dia <= 28 and 1990 <= year <= 2023)):
 
-                        print("Fecha introducida con exito.")
+                        print("Fecha valida.")
                         return datetime.strptime(str(dia) + "/" + str(mes) + "/" + str(year), "%d/%m/%Y").strftime(
                             "%d-%m-%Y")
                     else:
